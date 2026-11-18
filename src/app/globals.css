@@ -1,0 +1,36 @@
+@import "tailwindcss";
+@config "../../tailwind.config.ts";
+
+html {
+  touch-action: manipulation;
+}
+
+body {
+  background-color: #030712;
+  color: #e5e7eb;
+  overflow-x: hidden;
+}
+
+.glass-card {
+  background-color: rgb(15 23 42 / 0.72);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgb(30 41 59 / 0.9);
+}
+
+.pureimage-page-shell::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 45% at 15% -10%, rgba(16, 185, 129, 0.18), transparent 55%),
+    radial-gradient(ellipse 60% 40% at 85% 0%, rgba(139, 92, 246, 0.15), transparent 50%),
+    #030712;
+}
+
+input,
+textarea,
+select {
+  max-width: 100%;
+}

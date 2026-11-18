@@ -1,0 +1,58 @@
+"use client";
+
+import type { ReactNode } from "react";
+
+import { ImageDropzone } from "@/components/tools/ImageDropzone";
+import { ProcessedGrid } from "@/components/tools/ProcessedGrid";
+import { useI18n } from "@/i18n/context";
+import type { ProcessedImage } from "@/lib/image/types";
+
+export function ToolPanel({
+  busy,
+  items,
+  onFiles,
+  onDownload,
+  onRemove,
+  onZip,
+  zipLabel,
+  controls,
+  showSavings = true,
+}: {
+  busy: boolean;
+  items: ProcessedImage[];
+  onFiles: (files: File[]) => void;
+  onDownload: (item: ProcessedImage) => void;
+  onRemove: (id: string) => void;
+  onZip?: () => void;
+  zipLabel: string;
+  controls?: ReactNode;
+  showSavings?: boolean;
+}) {
+  const { t } = useI18n();
+  return (
+    <div className="space-y-6">
+      <ImageDropzone onFiles={onFiles} />
+      {controls}
+      {busy ? <p className="text-center text-sm text-violet-300">{t.common.processing}</p> : null}
+      <ProcessedGrid
+        items={items}
+        onDownload={onDownload}
+        onRemove={onRemove}
+        originalLabel={t.labels.original}
+        outputLabel={t.labels.output}
+        savingsLabel={t.labels.savings}
+        showSavings={showSavings}
+      />
+      {items.length > 1 && onZip ? (
+        <button
+          type="button"
+          onClick={onZip}
+          className="w-full rounded-xl bg-gradient-to-r from-violet-600 to-violet-500 px-4 py-3 text-sm font-semibold text-white"
+        >
+          {zipLabel}
+        </button>
+      ) : null}
+      {items.length ? <ImageDropzone onFiles={onFiles} compact /> : null}
+    </div>
+  );
+}

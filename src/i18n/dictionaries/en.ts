@@ -1,0 +1,97 @@
+import type { Dictionary } from "@/i18n/types";
+
+export const en: Dictionary = {
+  brand: {
+    name: "Pure Image",
+    tagline: "Private image tools — compress, convert, and resize in your browser.",
+  },
+  nav: {
+    selectLanguage: "Language",
+    menuAria: "Site menu",
+    menuClose: "Close menu",
+    home: "Home",
+    tools: "Tools",
+    compress: "Compress",
+    convert: "Convert",
+    edit: "Edit",
+    doc: "Documents",
+  },
+  ecosystem: {
+    menuLabel: "Our ecosystem",
+    menuShort: "Ecosystem",
+    menuAria: "kixt.net projects",
+    menuHint:
+      "Browser-local tools from the same team — privacy-first, no unnecessary uploads.",
+    activeHere: "Active",
+    current: "You are here",
+    comingSoon: "Coming soon",
+    close: "Close ecosystem menu",
+    items: {
+      purepdf: { name: "PurePDF", tagline: "Fast PDF tools at pdf.kixt.net" },
+      pureQr: { name: "PureQR", tagline: "QR generator at qr.kixt.net" },
+      pureTable: { name: "PureTable", tagline: "Tables & Excel at table.kixt.net" },
+      pureSign: { name: "PureSign", tagline: "Sign PDFs at sign.kixt.net" },
+      pureImage: { name: "Pure Image", tagline: "Compress & convert at img.kixt.net" },
+    },
+  },
+  security: {
+    badge: "100% client-side",
+    badgeShort: "Local only",
+    title: "Your photos never leave this device",
+    body: "Pure Image runs entirely in your browser using the Canvas API. Files are not uploaded to img.kixt.net or any third-party server.",
+    points: [
+      "Processing happens locally in your browser",
+      "No cloud uploads or account required",
+      "Download results instantly when ready",
+    ],
+  },
+  home: {
+    heroTitle: "Pure Image — fast, private image utilities",
+    heroSubtitle:
+      "Four categories — compression, converters, resize & edit, and document scans — 14 tools, 100% in your browser.",
+    toolsHeading: "Image tools",
+    openTool: "Open tool →",
+  },
+  toolAd: { sponsored: "Sponsored" },
+  rewardedAd: {
+    title: "Watch a short sponsored clip",
+    message: "To download the ZIP archive with all processed images, please watch the video ad.",
+    watch: "Start video",
+    watching: "Playing…",
+    download: "Download ZIP",
+    progress: (seconds) => `${seconds}s remaining`,
+    close: "Cancel",
+    slotLabel: "Rewarded video",
+  },
+  dropzone: {
+    title: "Drag & drop images here",
+    hint: "Or click to browse — JPG, PNG, WebP, GIF, BMP, and HEIC supported.",
+    addMore: "Add more files",
+  },
+  labels: {
+    original: "Original",
+    output: "Output",
+    savings: "Saved",
+  },
+  common: {
+    backHome: "Back to home",
+    remove: "Remove",
+    processing: "Processing…",
+    errorLoad: "Could not read this image. Try another file or format.",
+    downloadZip: "Download all as ZIP",
+    downloadOne: "Download",
+  },
+  toolUi: {
+    quality: "JPEG quality",
+    maxWidth: "Max width (px)",
+    targetKb: "Target size (KB)",
+    originalSize: "Original",
+    estimated: "≈ output",
+    dropForEstimate: "Add an image to preview estimated output size.",
+    cropHint: "Drag inside the frame to move; drag outside edges to resize the crop area.",
+    applyCrop: "Apply crop to all images",
+    documentMode: "Document mode (high contrast B&W)",
+    threshold: "Black/white threshold",
+    convertQuality: "Output quality",
+  },
+};
