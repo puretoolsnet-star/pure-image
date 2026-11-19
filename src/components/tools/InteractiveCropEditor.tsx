@@ -19,11 +19,13 @@ export function InteractiveCropEditor({
   file,
   aspect,
   onApply,
+  onLiveCrop,
   busy,
 }: {
   file: File | null;
   aspect: Aspect;
   onApply: (crop: NormalizedCrop) => void;
+  onLiveCrop?: (crop: NormalizedCrop) => void;
   busy: boolean;
 }) {
   const { t } = useI18n();
@@ -33,26 +35,6 @@ export function InteractiveCropEditor({
   const dragRef = useRef<{ mode: "move" | "resize"; ox: number; oy: number; start: NormalizedCrop } | null>(
     null,
   );
-
-  useEffect(() => {
-    if (!file) return;
-    const url = URL.createObjectURL(file);
-    const img = new Image();
-    img.onload = () => {
-      imgRef.current = img;
-      const c = canvasRef.current;
-      if (!c) return;
-      const maxW = 560;
-      const scale = Math.min(1, maxW / img.naturalWidth);
-      c.width = Math.round(img.naturalWidth * scale);
-      c.height = Math.round(img.naturalHeight * scale);
-      fitCropToAspect(aspect, setCrop);
-      paint();
-    };
-    img.src = url;
-    return () => URL.revokeObjectURL(url);
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- repaint when aspect changes
-  }, [file, aspect]);
 
   const paint = useCallback(() => {
     const c = canvasRef.current;
@@ -76,8 +58,32 @@ export function InteractiveCropEditor({
   }, [crop]);
 
   useEffect(() => {
+    if (!file) return;
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      imgRef.current = img;
+      const c = canvasRef.current;
+      if (!c) return;
+      const maxW = 560;
+      const scale = Math.min(1, maxW / img.naturalWidth);
+      c.width = Math.round(img.naturalWidth * scale);
+      c.height = Math.round(img.naturalHeight * scale);
+      fitCropToAspect(aspect, setCrop);
+    };
+    img.src = url;
+    return () => URL.revokeObjectURL(url);
+  }, [file, aspect]);
+
+  useEffect(() => {
     paint();
-  }, [paint]);
+  }, [paint, file, aspect]);
+
+  useEffect(() => {
+    if (!onLiveCrop) return;
+    const timer = window.setTimeout(() => onLiveCrop(crop), 450);
+    return () => window.clearTimeout(timer);
+  }, [crop, onLiveCrop]);
 
   function pointerToNorm(clientX: number, clientY: number) {
     const c = canvasRef.current!;
@@ -115,8 +121,8 @@ export function InteractiveCropEditor({
         y: clamp(drag.start.y + dy, 0, 1 - prev.h),
       }));
     } else {
-      setCrop((prev) => {
-        let w = clamp(drag.start.w + dx, 0.1, 1 - drag.start.x);
+      setCrop(() => {
+        const w = clamp(drag.start.w + dx, 0.1, 1 - drag.start.x);
         let h = clamp(drag.start.h + dy, 0.1, 1 - drag.start.y);
         const ar = aspectRatio(aspect);
         if (ar) h = w / ar;

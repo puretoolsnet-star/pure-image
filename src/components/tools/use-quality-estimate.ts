@@ -9,12 +9,11 @@ export function useQualityEstimate(sample: File | null, quality: number, maxWidt
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    if (!sample) {
-      setEstimate(null);
-      return;
-    }
+    if (!sample) return;
     let cancelled = false;
-    setBusy(true);
+  void Promise.resolve().then(() => {
+    if (!cancelled) setBusy(true);
+  });
     void estimateJpegBytes(sample, quality, maxWidth)
       .then((bytes) => {
         if (!cancelled) setEstimate(formatKb(bytes));
@@ -30,5 +29,5 @@ export function useQualityEstimate(sample: File | null, quality: number, maxWidt
     };
   }, [sample, quality, maxWidth]);
 
-  return { estimate, estimating: busy };
+  return { estimate: sample ? estimate : null, estimating: busy && Boolean(sample) };
 }

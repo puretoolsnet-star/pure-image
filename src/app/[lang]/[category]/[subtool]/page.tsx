@@ -2,8 +2,8 @@ import { notFound } from "next/navigation";
 
 import { isLang, LANGS } from "@/i18n/locales";
 import { buildToolRouteMetadata } from "@/lib/seo/metadata";
-import { routeFromSegments, TOOLS_BY_CATEGORY, type ToolRouteId } from "@/lib/tools/routes";
-import { TOOL_REGISTRY } from "@/lib/tools/registry";
+import { ToolPageLoader } from "@/components/tools/ToolPageLoader";
+import { routeFromSegments, TOOLS_BY_CATEGORY } from "@/lib/tools/routes";
 
 type PageProps = {
   params: Promise<{ lang: string; category: string; subtool: string }>;
@@ -29,7 +29,5 @@ export default async function SubtoolPage({ params }: PageProps) {
   const { category, subtool } = await params;
   const routeId = routeFromSegments(category, subtool);
   if (!routeId) notFound();
-  const Tool = TOOL_REGISTRY[routeId as ToolRouteId];
-  if (!Tool) notFound();
-  return <Tool />;
+  return <ToolPageLoader routeId={routeId} />;
 }

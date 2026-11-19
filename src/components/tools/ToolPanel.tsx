@@ -2,10 +2,11 @@
 
 import type { ReactNode } from "react";
 
+import { DownloadRewardHint } from "@/components/tools/DownloadRewardHint";
 import { ImageDropzone } from "@/components/tools/ImageDropzone";
-import { ProcessedGrid } from "@/components/tools/ProcessedGrid";
+import { LivePreviewGrid } from "@/components/tools/LivePreviewGrid";
 import { useI18n } from "@/i18n/context";
-import type { ProcessedImage } from "@/lib/image/types";
+import type { LivePreviewImage } from "@/lib/image/types";
 
 export function ToolPanel({
   busy,
@@ -19,9 +20,9 @@ export function ToolPanel({
   showSavings = true,
 }: {
   busy: boolean;
-  items: ProcessedImage[];
+  items: LivePreviewImage[];
   onFiles: (files: File[]) => void;
-  onDownload: (item: ProcessedImage) => void;
+  onDownload: (item: LivePreviewImage) => void;
   onRemove: (id: string) => void;
   onZip?: () => void;
   zipLabel: string;
@@ -33,9 +34,9 @@ export function ToolPanel({
     <div className="space-y-6">
       <ImageDropzone onFiles={onFiles} />
       {controls}
-      {busy ? <p className="text-center text-sm text-violet-300">{t.common.processing}</p> : null}
-      <ProcessedGrid
+      <LivePreviewGrid
         items={items}
+        busy={busy}
         onDownload={onDownload}
         onRemove={onRemove}
         originalLabel={t.labels.original}
@@ -43,6 +44,7 @@ export function ToolPanel({
         savingsLabel={t.labels.savings}
         showSavings={showSavings}
       />
+      {items.length ? <DownloadRewardHint /> : null}
       {items.length > 1 && onZip ? (
         <button
           type="button"

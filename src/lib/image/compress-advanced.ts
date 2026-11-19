@@ -1,18 +1,33 @@
 import { canvasToBlob, scaleToMaxWidth, outputFileName } from "@/lib/image/canvas";
 import { loadImageFromFile } from "@/lib/image/decode";
-import type { ProcessedImage } from "@/lib/image/types";
+import { pickOutputMime } from "@/lib/image/output-mime";
+import type { OutputFormat, ProcessedImage } from "@/lib/image/types";
 
 function uid(): string {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 }
 
-async function encodeJpeg(img: HTMLImageElement, w: number, h: number, quality: number): Promise<Blob> {
+async function encodeRaster(
+  img: HTMLImageElement,
+  w: number,
+  h: number,
+  quality: number,
+  mime: OutputFormat,
+): Promise<Blob> {
   const canvas = document.createElement("canvas");
   canvas.width = w;
   canvas.height = h;
   const ctx = canvas.getContext("2d")!;
+  if (mime === "image/jpeg") {
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, w, h);
+  }
   ctx.drawImage(img, 0, 0, w, h);
-  return canvasToBlob(canvas, "image/jpeg", quality);
+  return canvasToBlob(canvas, mime, quality);
+}
+
+async function encodeJpeg(img: HTMLImageElement, w: number, h: number, quality: number): Promise<Blob> {
+  return encodeRaster(img, w, h, quality, "image/jpeg");
 }
 
 export async function compressWithQuality(
@@ -21,12 +36,13 @@ export async function compressWithQuality(
   maxWidth = 1920,
 ): Promise<ProcessedImage> {
   const img = await loadImageFromFile(file);
-  const quality = Math.min(0.95, Math.max(0.1, qualityPercent / 100));
+  const quality = Math.min(1, Math.max(0.1, qualityPercent / 100));
+  const mime = pickOutputMime(file.type);
   const { width, height } = scaleToMaxWidth(img.naturalWidth, img.naturalHeight, maxWidth);
-  const blob = await encodeJpeg(img, width, height, quality);
+  const blob = await encodeRaster(img, width, height, quality, mime);
   return {
     id: uid(),
-    name: outputFileName(file.name, "image/jpeg", `q${Math.round(qualityPercent)}`),
+    name: outputFileName(file.name, mime, `q${Math.round(qualityPercent)}`),
     originalSize: file.size,
     outputSize: blob.size,
     blob,

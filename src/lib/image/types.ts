@@ -11,6 +11,11 @@ export type ProcessedImage = {
   height: number;
 };
 
+/** Processed output plus original file preview URL for live before/after. */
+export type LivePreviewImage = ProcessedImage & {
+  sourcePreviewUrl: string;
+};
+
 export type ResizePresetId =
   | "instagram"
   | "facebook"

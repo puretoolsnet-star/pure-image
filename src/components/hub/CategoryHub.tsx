@@ -5,7 +5,6 @@ import type { LucideIcon } from "lucide-react";
 
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { PrivacyBanner } from "@/components/layout/PrivacyBanner";
-import { AdBanner } from "@/components/ads/AdBanner";
 import { useI18n } from "@/i18n/context";
 import { getCategoryCopy, getToolCopy } from "@/i18n/tool-messages";
 import {
@@ -59,10 +58,8 @@ export function CategoryHub({ categoryId }: { categoryId: CategoryId }) {
               })}
             </ul>
           </div>
-          <AdBanner className="sticky top-24" />
         </div>
         <div className="mt-8 hidden pb-10 md:block">
-          <AdBanner />
         </div>
       </div>
     </div>

@@ -41,7 +41,9 @@ export function I18nProvider({
 
   useEffect(() => {
     const fromPath = langFromPathname(pathname);
-    if (fromPath && fromPath !== lang) setLangState(fromPath);
+    if (!fromPath || fromPath === lang) return;
+    const id = window.requestAnimationFrame(() => setLangState(fromPath));
+    return () => window.cancelAnimationFrame(id);
   }, [pathname, lang]);
 
   useEffect(() => {

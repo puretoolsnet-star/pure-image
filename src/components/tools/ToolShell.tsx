@@ -4,7 +4,6 @@ import { ArrowLeft, type LucideIcon } from "lucide-react";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-import { AdBanner } from "@/components/ads/AdBanner";
 import { PrivacyBanner } from "@/components/layout/PrivacyBanner";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { PageSeoSection } from "@/components/seo/PageSeoSection";
@@ -59,10 +58,8 @@ export function ToolShell({
             <main className="pb-16">{children}</main>
             <PageSeoSection content={seoContent} />
           </div>
-          <AdBanner className="sticky top-24" />
         </div>
         <div className="mt-8 hidden pb-10 md:block">
-          <AdBanner />
         </div>
       </div>
     </div>

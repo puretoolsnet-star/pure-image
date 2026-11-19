@@ -1,4 +1,3 @@
-import type { ProcessedImage } from "@/lib/image/types";
 import { downloadBlob } from "@/lib/image/process";
 
 function uid(): string {

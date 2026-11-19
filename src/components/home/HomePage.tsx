@@ -3,12 +3,11 @@
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
-import { AdBanner } from "@/components/ads/AdBanner";
 import { PrivacyBanner } from "@/components/layout/PrivacyBanner";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { useI18n } from "@/i18n/context";
 import { getCategoryCopy } from "@/i18n/tool-messages";
-import { CATEGORIES, type CategoryId } from "@/lib/tools/routes";
+import { CATEGORIES } from "@/lib/tools/routes";
 import { CATEGORY_ICONS } from "@/lib/tools/icons";
 import { useLocalizedPath } from "@/lib/i18n/use-localized-path";
 import { cn } from "@/lib/cn";
@@ -64,10 +63,8 @@ export function HomePage() {
               })}
             </ul>
           </div>
-          <AdBanner className="sticky top-24" />
         </div>
         <div className="mt-8 hidden pb-10 md:block">
-          <AdBanner />
         </div>
       </div>
     </div>

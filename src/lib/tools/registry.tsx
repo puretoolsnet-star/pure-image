@@ -1,18 +1,19 @@
 "use client";
 
+const modal = null;
+const requestDownload = (fn: () => unknown, _meta?: unknown) => { void fn(); };
+
 import { useCallback, useEffect, useState, type ComponentType } from "react";
 
+import { PdfLivePreview } from "@/components/tools/PdfLivePreview";
+import { SmartCompressTool } from "@/components/tools/SmartCompressTool";
 import { ImageDropzone } from "@/components/tools/ImageDropzone";
 import { ToolPanel } from "@/components/tools/ToolPanel";
 import { ToolShell } from "@/components/tools/ToolShell";
-import { useImageBatch } from "@/components/tools/use-image-batch";
+import { useLiveTool } from "@/components/tools/use-live-tool";
 import { CompressSliderPanel } from "@/components/tools/CompressSliderPanel";
 import { InteractiveCropEditor } from "@/components/tools/InteractiveCropEditor";
-import {
-  smartCompressFile,
-  compressToTargetKb,
-  compressWithQuality,
-} from "@/lib/image/compress-advanced";
+import { compressToTargetKb, compressWithQuality } from "@/lib/image/compress-advanced";
 import { convertToFormat, pngToJpeg } from "@/lib/image/convert-raster";
 import { resizeFile } from "@/lib/image/process";
 import {
@@ -28,7 +29,6 @@ import { imagesToPdf, downloadPdf } from "@/lib/image/pdf";
 import { RESIZE_PRESETS, type OutputFormat, type ResizePresetId } from "@/lib/image/types";
 import { TOOL_ICONS } from "@/lib/tools/icons";
 import type { ToolRouteId } from "@/lib/tools/routes";
-import { useMandatoryAd } from "@/lib/use-mandatory-ad";
 import { useI18n } from "@/i18n/context";
 import { cn } from "@/lib/cn";
 
@@ -48,54 +48,21 @@ function makeTool(routeId: ToolRouteId, inner: ComponentType) {
   };
 }
 
-function SmartCompressInner() {
-  const batch = useImageBatch();
-  const [quality, setQuality] = useState(82);
-  const [maxWidth, setMaxWidth] = useState(1920);
-  const [sample, setSample] = useState<File | null>(null);
-  const onFiles = useCallback(
-    (files: File[]) => {
-      if (files[0]) setSample(files[0]);
-      void batch.run(files, (f) => smartCompressFile(f, quality, maxWidth));
-    },
-    [batch, quality, maxWidth],
-  );
-  return (
-    <>
-      <ToolPanel
-        busy={batch.busy}
-        items={batch.items}
-        onFiles={onFiles}
-        onDownload={batch.downloadOne}
-        onRemove={batch.remove}
-        onZip={() => batch.downloadZip()}
-        zipLabel={batch.zipLabel}
-        controls={
-          <CompressSliderPanel
-            sample={sample}
-            quality={quality}
-            maxWidth={maxWidth}
-            onQuality={setQuality}
-            onMaxWidth={setMaxWidth}
-          />
-        }
-      />
-      {batch.modal}
-    </>
-  );
-}
-
 function ToSizeInner() {
-  const batch = useImageBatch();
   const [kb, setKb] = useState(200);
   const [maxWidth, setMaxWidth] = useState(1920);
   const [sample, setSample] = useState<File | null>(null);
+  const worker = useCallback(
+    (f: File) => compressToTargetKb(f, kb, maxWidth),
+    [kb, maxWidth],
+  );
+  const batch = useLiveTool(worker);
   const onFiles = useCallback(
     (files: File[]) => {
       if (files[0]) setSample(files[0]);
-      void batch.run(files, (f) => compressToTargetKb(f, kb, maxWidth));
+      batch.onFiles(files);
     },
-    [batch, kb, maxWidth],
+    [batch],
   );
   return (
     <>
@@ -127,16 +94,20 @@ function ToSizeInner() {
 }
 
 function BatchCompressInner() {
-  const batch = useImageBatch();
   const [quality, setQuality] = useState(82);
   const [maxWidth, setMaxWidth] = useState(1920);
   const [sample, setSample] = useState<File | null>(null);
+  const worker = useCallback(
+    (f: File) => compressWithQuality(f, quality, maxWidth),
+    [quality, maxWidth],
+  );
+  const batch = useLiveTool(worker);
   const onFiles = useCallback(
     (files: File[]) => {
       if (files[0]) setSample(files[0]);
-      void batch.run(files, (f) => compressWithQuality(f, quality, maxWidth));
+      batch.onFiles(files);
     },
-    [batch, quality, maxWidth],
+    [batch],
   );
   return (
     <>
@@ -187,13 +158,11 @@ function ConvertQualitySlider({
 }
 
 function ConvertInner({ mime }: { mime: OutputFormat }) {
-  const batch = useImageBatch();
   const [quality, setQuality] = useState(88);
   const q = quality / 100;
-  const onFiles = useCallback(
-    (files: File[]) => void batch.run(files, (f) => convertToFormat(f, mime, q)),
-    [batch, mime, q],
-  );
+  const worker = useCallback((f: File) => convertToFormat(f, mime, q), [mime, q]);
+  const batch = useLiveTool(worker);
+  const onFiles = useCallback((files: File[]) => batch.onFiles(files), [batch]);
   return (
     <>
       <ToolPanel
@@ -212,12 +181,10 @@ function ConvertInner({ mime }: { mime: OutputFormat }) {
 }
 
 function PngJpgInner() {
-  const batch = useImageBatch();
   const [quality, setQuality] = useState(88);
-  const onFiles = useCallback(
-    (files: File[]) => void batch.run(files, (f) => pngToJpeg(f, quality / 100)),
-    [batch, quality],
-  );
+  const worker = useCallback((f: File) => pngToJpeg(f, quality / 100), [quality]);
+  const batch = useLiveTool(worker);
+  const onFiles = useCallback((files: File[]) => batch.onFiles(files), [batch]);
   return (
     <>
       <ToolPanel
@@ -236,22 +203,23 @@ function PngJpgInner() {
 }
 
 function AvifInner() {
-  const batch = useImageBatch();
+  const { t } = useI18n();
   const [quality, setQuality] = useState(80);
   const [ok, setOk] = useState<boolean | null>(null);
   useEffect(() => {
     void supportsAvif().then(setOk);
   }, []);
-  const onFiles = useCallback(
-    (files: File[]) =>
-      void batch.run(files, (f) => convertToFormat(f, "image/avif", quality / 100)),
-    [batch, quality],
+  const worker = useCallback(
+    (f: File) => convertToFormat(f, "image/avif", quality / 100),
+    [quality],
   );
+  const batch = useLiveTool(worker);
+  const onFiles = useCallback((files: File[]) => batch.onFiles(files), [batch]);
   return (
     <>
       {ok === false ? (
         <p className="mb-4 rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-sm text-amber-200">
-          AVIF encoding is not supported in this browser. Try WebP instead.
+          {t.toolUi.avifUnsupported}
         </p>
       ) : null}
       <ToolPanel
@@ -270,12 +238,16 @@ function AvifInner() {
 }
 
 function SvgInner() {
-  const batch = useImageBatch();
+  const { t } = useI18n();
   const [mime, setMime] = useState<OutputFormat>("image/png");
-  const onFiles = useCallback(
-    (files: File[]) => void batch.run(files, (f) => svgToRaster(f, mime)),
-    [batch, mime],
-  );
+  const formatLabel = (m: OutputFormat) => {
+    if (m === "image/png") return t.toolUi.formatPng;
+    if (m === "image/jpeg") return t.toolUi.formatJpeg;
+    return t.toolUi.formatWebp;
+  };
+  const worker = useCallback((f: File) => svgToRaster(f, mime), [mime]);
+  const batch = useLiveTool(worker);
+  const onFiles = useCallback((files: File[]) => batch.onFiles(files), [batch]);
   return (
     <>
       <ToolPanel
@@ -298,7 +270,7 @@ function SvgInner() {
                   mime === m ? "bg-emerald-500 text-slate-950" : "border border-slate-700 text-slate-300",
                 )}
               >
-                {m.replace("image/", "").toUpperCase()}
+                {formatLabel(m)}
               </button>
             ))}
           </div>
@@ -310,17 +282,17 @@ function SvgInner() {
 }
 
 function ResizeInner() {
-  const batch = useImageBatch();
+  const { t } = useI18n();
   const [w, setW] = useState(1280);
   const [h, setH] = useState(720);
   const [keep, setKeep] = useState(true);
-  const onFiles = useCallback(
-    (files: File[]) =>
-      void batch.run(files, (f) =>
-        resizeFile(f, { preset: "custom", width: w, height: h, keepAspect: keep }),
-      ),
-    [batch, w, h, keep],
+  const worker = useCallback(
+    (f: File) =>
+      resizeFile(f, { preset: "custom", width: w, height: h, keepAspect: keep }),
+    [w, h, keep],
   );
+  const batch = useLiveTool(worker);
+  const onFiles = useCallback((files: File[]) => batch.onFiles(files), [batch]);
   return (
     <>
       <ToolPanel
@@ -335,7 +307,7 @@ function ResizeInner() {
         controls={
           <div className="glass-card grid gap-3 rounded-2xl p-4 sm:grid-cols-2">
             <label className="text-sm text-slate-200">
-              Width
+              {t.toolUi.width}
               <input
                 type="number"
                 value={w}
@@ -344,7 +316,7 @@ function ResizeInner() {
               />
             </label>
             <label className="text-sm text-slate-200">
-              Height
+              {t.toolUi.height}
               <input
                 type="number"
                 value={h}
@@ -354,7 +326,7 @@ function ResizeInner() {
             </label>
             <label className="col-span-full flex items-center gap-2 text-sm text-slate-300">
               <input type="checkbox" checked={keep} onChange={(e) => setKeep(e.target.checked)} />
-              Keep aspect ratio
+              {t.toolUi.keepAspect}
             </label>
           </div>
         }
@@ -364,22 +336,37 @@ function ResizeInner() {
   );
 }
 
+function socialPresetLabel(
+  t: ReturnType<typeof useI18n>["t"],
+  key: keyof typeof RESIZE_PRESETS,
+): string {
+  const labels: Record<keyof typeof RESIZE_PRESETS, string> = {
+    instagram: t.toolUi.presetInstagram,
+    facebook: t.toolUi.presetFacebook,
+    twitter: t.toolUi.presetTwitter,
+    youtube: t.toolUi.presetYoutube,
+    linkedin: t.toolUi.presetLinkedin,
+    avatar: t.toolUi.presetAvatar,
+  };
+  return labels[key];
+}
+
 function PresetsInner() {
-  const batch = useImageBatch();
+  const { t } = useI18n();
   const [preset, setPreset] = useState<ResizePresetId>("instagram");
   const dim = RESIZE_PRESETS[preset as keyof typeof RESIZE_PRESETS];
-  const onFiles = useCallback(
-    (files: File[]) =>
-      void batch.run(files, (f) =>
-        resizeFile(f, {
-          preset,
-          width: dim.width,
-          height: dim.height,
-          keepAspect: true,
-        }),
-      ),
-    [batch, preset, dim.height, dim.width],
+  const worker = useCallback(
+    (f: File) =>
+      resizeFile(f, {
+        preset,
+        width: dim.width,
+        height: dim.height,
+        keepAspect: true,
+      }),
+    [preset, dim.height, dim.width],
   );
+  const batch = useLiveTool(worker);
+  const onFiles = useCallback((files: File[]) => batch.onFiles(files), [batch]);
   const keys = Object.keys(RESIZE_PRESETS) as (keyof typeof RESIZE_PRESETS)[];
   return (
     <>
@@ -404,7 +391,7 @@ function PresetsInner() {
                   preset === key ? "bg-violet-600 text-white" : "border border-slate-700 text-slate-300",
                 )}
               >
-                {key}
+                {socialPresetLabel(t, key)}
               </button>
             ))}
           </div>
@@ -416,18 +403,27 @@ function PresetsInner() {
 }
 
 function CropInner() {
-  const batch = useImageBatch();
+  const { t } = useI18n();
   const [aspect, setAspect] = useState<"free" | "1:1" | "16:9" | "4:5">("1:1");
-  const [queue, setQueue] = useState<File[]>([]);
-  const preview = queue[0] ?? null;
-  const onFiles = (files: File[]) => setQueue((prev) => [...prev, ...files]);
-  const apply = (crop: NormalizedCrop) => {
-    if (!queue.length) return;
-    void batch.run(queue, (f) => cropImageNormalized(f, crop));
+  const [crop, setCrop] = useState<NormalizedCrop>({ x: 0.1, y: 0.1, w: 0.8, h: 0.8 });
+  const [previewFile, setPreviewFile] = useState<File | null>(null);
+  const aspectLabel = (m: (typeof aspect)) => {
+    if (m === "free") return t.toolUi.cropFree;
+    if (m === "1:1") return t.toolUi.crop11;
+    if (m === "16:9") return t.toolUi.crop169;
+    return t.toolUi.crop45;
   };
+  const worker = useCallback((f: File) => cropImageNormalized(f, crop), [crop]);
+  const batch = useLiveTool(worker);
+  const onFiles = useCallback(
+    (files: File[]) => {
+      if (files.length) setPreviewFile(files[files.length - 1]!);
+      batch.onFiles(files);
+    },
+    [batch],
+  );
   return (
     <div className="space-y-6">
-      <ImageDropzone onFiles={onFiles} />
       <div className="flex flex-wrap gap-2">
         {(["free", "1:1", "16:9", "4:5"] as const).map((m) => (
           <button
@@ -439,11 +435,17 @@ function CropInner() {
               aspect === m ? "bg-emerald-500 text-slate-950" : "border border-slate-700 text-slate-300",
             )}
           >
-            {m}
+            {aspectLabel(m)}
           </button>
         ))}
       </div>
-      <InteractiveCropEditor file={preview} aspect={aspect} onApply={apply} busy={batch.busy} />
+      <InteractiveCropEditor
+        file={previewFile}
+        aspect={aspect}
+        onApply={setCrop}
+        onLiveCrop={setCrop}
+        busy={batch.busy}
+      />
       <ToolPanel
         busy={batch.busy}
         items={batch.items}
@@ -459,42 +461,36 @@ function CropInner() {
   );
 }
 
+type RotateAction = "r90" | "r180" | "flipH" | "flipV";
+
 function RotateInner() {
-  const batch = useImageBatch();
-  const [queue, setQueue] = useState<File[]>([]);
-  const onFiles = (files: File[]) => setQueue(files);
-  const apply = async (action: "r90" | "r180" | "flipH" | "flipV") => {
-    if (!queue.length) return;
-    await batch.run(queue, async (f) => {
+  const { t } = useI18n();
+  const [action, setAction] = useState<RotateAction>("r90");
+  const worker = useCallback(
+    async (f: File) => {
       if (action === "r90") return rotateImage(f, 90);
       if (action === "r180") return rotateImage(f, 180);
       if (action === "flipH") return mirrorImage(f, "horizontal");
       return mirrorImage(f, "vertical");
-    });
-  };
+    },
+    [action],
+  );
+  const batch = useLiveTool(worker);
+  const onFiles = useCallback((files: File[]) => batch.onFiles(files), [batch]);
+  const actions: { key: RotateAction; label: string }[] = [
+    { key: "r90", label: t.toolUi.rotate90 },
+    { key: "r180", label: t.toolUi.rotate180 },
+    { key: "flipH", label: t.toolUi.mirrorH },
+    { key: "flipV", label: t.toolUi.mirrorV },
+  ];
   return (
     <div className="space-y-4">
-      <ImageDropzone onFiles={onFiles} />
-      <div className="flex flex-wrap gap-2">
-        {(
-          [
-            ["r90", "90°"],
-            ["r180", "180°"],
-            ["flipH", "Mirror H"],
-            ["flipV", "Mirror V"],
-          ] as const
-        ).map(([key, label]) => (
-          <button
-            key={key}
-            type="button"
-            disabled={!queue.length || batch.busy}
-            onClick={() => void apply(key)}
-            className="rounded-lg border border-slate-700 bg-slate-800/80 px-3 py-2 text-sm text-slate-200 disabled:opacity-40"
-          >
-            {label}
-          </button>
-        ))}
-      </div>
+      <RotateActionBar
+        actions={actions}
+        selected={action}
+        onSelect={setAction}
+        disabled={!batch.sourceCount}
+      />
       <ToolPanel
         busy={batch.busy}
         items={batch.items}
@@ -506,24 +502,55 @@ function RotateInner() {
         showSavings={false}
       />
       {batch.modal}
+    </div>
+  );
+}
+
+function RotateActionBar({
+  actions,
+  selected,
+  onSelect,
+  disabled,
+}: {
+  actions: { key: RotateAction; label: string }[];
+  selected: RotateAction;
+  onSelect: (a: RotateAction) => void;
+  disabled: boolean;
+}) {
+  return (
+    <div className="flex flex-wrap gap-2">
+      {actions.map(({ key, label }) => (
+        <button
+          key={key}
+          type="button"
+          disabled={disabled}
+          onClick={() => onSelect(key)}
+          className={cn(
+            "rounded-lg border px-3 py-2 text-sm disabled:opacity-40",
+            selected === key
+              ? "border-emerald-500/50 bg-emerald-500/15 text-emerald-300"
+              : "border-slate-700 bg-slate-800/80 text-slate-200",
+          )}
+        >
+          {label}
+        </button>
+      ))}
     </div>
   );
 }
 
 function EnhanceScanInner() {
   const { t } = useI18n();
-  const batch = useImageBatch();
   const [contrast, setContrast] = useState(130);
   const [brightness, setBrightness] = useState(108);
   const [documentMode, setDocumentMode] = useState(true);
   const [threshold, setThreshold] = useState(165);
-  const onFiles = useCallback(
-    (files: File[]) =>
-      void batch.run(files, (f) =>
-        enhanceScanImage(f, { contrast, brightness, documentMode, threshold }),
-      ),
-    [batch, contrast, brightness, documentMode, threshold],
+  const worker = useCallback(
+    (f: File) => enhanceScanImage(f, { contrast, brightness, documentMode, threshold }),
+    [contrast, brightness, documentMode, threshold],
   );
+  const batch = useLiveTool(worker);
+  const onFiles = useCallback((files: File[]) => batch.onFiles(files), [batch]);
   return (
     <>
       <ToolPanel
@@ -546,7 +573,7 @@ function EnhanceScanInner() {
               {t.toolUi.documentMode}
             </label>
             <label>
-              Contrast ({contrast}%)
+              {t.toolUi.contrast} ({contrast}%)
               <input
                 type="range"
                 min={80}
@@ -557,7 +584,7 @@ function EnhanceScanInner() {
               />
             </label>
             <label>
-              Brightness ({brightness}%)
+              {t.toolUi.brightness} ({brightness}%)
               <input
                 type="range"
                 min={80}
@@ -589,30 +616,49 @@ function EnhanceScanInner() {
 }
 
 function ImagesToPdfInner() {
-  const { requestDownload, modal } = useMandatoryAd();
+  const { t } = useI18n();
+  const [files, setFiles] = useState<File[]>([]);
   const [busy, setBusy] = useState(false);
-  const onFiles = async (files: File[]) => {
+  const onFiles = useCallback((incoming: File[]) => {
+    setFiles((prev) => [...prev, ...incoming]);
+  }, []);
+  const buildPdf = useCallback(async () => {
     if (files.length < 2) return;
     setBusy(true);
     try {
       const pdf = await imagesToPdf(files);
-      requestDownload(() => downloadPdf(pdf.blob, pdf.name), "Download PDF");
+      requestDownload(() => downloadPdf(pdf.blob, pdf.name), {
+        downloadLabel: t.common.downloadPdf,
+        kind: "pdf",
+      });
     } finally {
       setBusy(false);
     }
-  };
+  }, [files, requestDownload, t.common.downloadPdf]);
   return (
     <>
-      <ImageDropzone onFiles={(f) => void onFiles(f)} />
-      {busy ? <p className="text-sm text-violet-300">Building PDF…</p> : null}
-      <p className="text-xs text-slate-500">Select at least 2 images. Rewarded video unlocks download.</p>
+      <ImageDropzone onFiles={onFiles} />
+      <PdfLivePreview files={files} />
+      {busy ? <p className="text-sm text-violet-300">{t.livePreview.updating}</p> : null}
+      <p className="text-xs text-slate-500">{t.toolUi.pdfMinImages}</p>
+      {files.length >= 2 ? (
+        <button
+          type="button"
+          disabled={busy}
+          onClick={() => void buildPdf()}
+          className="w-full rounded-xl bg-gradient-to-r from-violet-600 to-violet-500 px-4 py-3 text-sm font-semibold text-white disabled:opacity-50"
+        >
+          {t.common.downloadPdf}
+        </button>
+      ) : null}
+      <p className="text-xs text-slate-500">{t.rewardedAd.downloadHint}</p>
       {modal}
     </>
   );
 }
 
 export const TOOL_REGISTRY: Record<ToolRouteId, ComponentType> = {
-  "compress/smart": makeTool("compress/smart", SmartCompressInner),
+  "compress/smart": makeTool("compress/smart", SmartCompressTool),
   "compress/to-size": makeTool("compress/to-size", ToSizeInner),
   "compress/batch": makeTool("compress/batch", BatchCompressInner),
   "convert/to-webp": makeTool("convert/to-webp", () => <ConvertInner mime="image/webp" />),
