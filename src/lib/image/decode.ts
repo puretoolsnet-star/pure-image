@@ -1,27 +1,9 @@
-const HEIC_PATTERN = /\.heic$/i;
-const HEIF_PATTERN = /\.heif$/i;
-
-function isHeic(file: File): boolean {
-  const type = file.type.toLowerCase();
-  return (
-    type === "image/heic" ||
-    type === "image/heif" ||
-    HEIC_PATTERN.test(file.name) ||
-    HEIF_PATTERN.test(file.name)
-  );
-}
-
-async function heicToBlob(file: File): Promise<Blob> {
-  const heic2any = (await import("heic2any")).default;
-  const result = await heic2any({ blob: file, toType: "image/jpeg", quality: 0.92 });
-  if (Array.isArray(result)) return result[0] as Blob;
-  return result as Blob;
-}
+import { decodeHeicToJpegBlob, isHeic } from "@/lib/image/heic";
 
 export async function fileToImageBitmap(file: File): Promise<ImageBitmap> {
   let blob: Blob = file;
   if (isHeic(file)) {
-    blob = await heicToBlob(file);
+    blob = await decodeHeicToJpegBlob(file, 0.92);
   }
   return createImageBitmap(blob);
 }

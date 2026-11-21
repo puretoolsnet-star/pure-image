@@ -7,7 +7,7 @@ function uid(): string {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 }
 
-async function encodeRaster(
+export async function encodeRaster(
   img: HTMLImageElement,
   w: number,
   h: number,
@@ -30,14 +30,23 @@ async function encodeJpeg(img: HTMLImageElement, w: number, h: number, quality: 
   return encodeRaster(img, w, h, quality, "image/jpeg");
 }
 
+export type CompressFormatChoice = "auto" | "jpeg" | "webp";
+
+function resolveCompressMime(fileType: string, format: CompressFormatChoice): OutputFormat {
+  if (format === "jpeg") return "image/jpeg";
+  if (format === "webp") return "image/webp";
+  return pickOutputMime(fileType);
+}
+
 export async function compressWithQuality(
   file: File,
   qualityPercent: number,
   maxWidth = 1920,
+  format: CompressFormatChoice = "auto",
 ): Promise<ProcessedImage> {
   const img = await loadImageFromFile(file);
   const quality = Math.min(1, Math.max(0.1, qualityPercent / 100));
-  const mime = pickOutputMime(file.type);
+  const mime = resolveCompressMime(file.type, format);
   const { width, height } = scaleToMaxWidth(img.naturalWidth, img.naturalHeight, maxWidth);
   const blob = await encodeRaster(img, width, height, quality, mime);
   return {
@@ -49,6 +58,7 @@ export async function compressWithQuality(
     previewUrl: URL.createObjectURL(blob),
     width,
     height,
+    outputMime: mime,
   };
 }
 
@@ -77,39 +87,12 @@ export async function compressToTargetKb(
   targetKb: number,
   maxWidth = 1920,
 ): Promise<ProcessedImage> {
-  const targetBytes = Math.max(8, targetKb) * 1024;
-  const img = await loadImageFromFile(file);
-  let width = scaleToMaxWidth(img.naturalWidth, img.naturalHeight, maxWidth).width;
-  let height = scaleToMaxWidth(img.naturalWidth, img.naturalHeight, maxWidth).height;
-
-  let best = await encodeJpeg(img, width, height, 0.92);
-
-  for (let shrink = 0; shrink < 8; shrink++) {
-    let low = 0.15;
-    let high = 0.95;
-    for (let i = 0; i < 14; i++) {
-      const mid = (low + high) / 2;
-      const blob = await encodeJpeg(img, width, height, mid);
-      if (blob.size > targetBytes) high = mid;
-      else {
-        low = mid;
-        best = blob;
-      }
-    }
-    if (best.size <= targetBytes) break;
-    width = Math.round(width * 0.85);
-    height = Math.round(height * 0.85);
-    if (width < 320 || height < 320) break;
-  }
-
-  return {
-    id: uid(),
-    name: outputFileName(file.name, "image/jpeg", `${targetKb}kb`),
-    originalSize: file.size,
-    outputSize: best.size,
-    blob: best,
-    previewUrl: URL.createObjectURL(best),
-    width,
-    height,
-  };
+  const { compressToTargetKbAdvanced } = await import("@/lib/image/compress-to-kb");
+  return compressToTargetKbAdvanced(file, {
+    targetKb,
+    maxWidth,
+    fitMode: "strict",
+    strategy: "balanced",
+    format: "auto",
+  });
 }

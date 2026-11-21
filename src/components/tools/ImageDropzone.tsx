@@ -13,10 +13,12 @@ export function ImageDropzone({
   onFiles,
   compact = false,
   accept = ACCEPT,
+  multiple = true,
 }: {
   onFiles: (files: File[]) => void;
   compact?: boolean;
   accept?: string;
+  multiple?: boolean;
 }) {
   const { t } = useI18n();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -85,7 +87,7 @@ export function ImageDropzone({
         ref={inputRef}
         type="file"
         accept={accept}
-        multiple
+        multiple={multiple}
         className="sr-only"
         onChange={(event) => handleFiles(event.target.files)}
       />

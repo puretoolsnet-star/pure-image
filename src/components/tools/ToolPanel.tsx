@@ -2,7 +2,6 @@
 
 import type { ReactNode } from "react";
 
-import { DownloadRewardHint } from "@/components/tools/DownloadRewardHint";
 import { ImageDropzone } from "@/components/tools/ImageDropzone";
 import { LivePreviewGrid } from "@/components/tools/LivePreviewGrid";
 import { useI18n } from "@/i18n/context";
@@ -44,7 +43,6 @@ export function ToolPanel({
         savingsLabel={t.labels.savings}
         showSavings={showSavings}
       />
-      {items.length ? <DownloadRewardHint /> : null}
       {items.length > 1 && onZip ? (
         <button
           type="button"

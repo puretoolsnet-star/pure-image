@@ -1,8 +1,5 @@
 "use client";
 
-const modal = null;
-const requestDownload = (fn: () => unknown, _meta?: unknown) => { void fn(); };
-
 import { useCallback, useRef, useState } from "react";
 
 import { compressWithQuality } from "@/lib/image/compress-advanced";
@@ -107,26 +104,17 @@ export function useSmartCompressBatch() {
   );
 
   const downloadOne = useCallback(
-    (item: SmartCompressedItem) => {
-      requestDownload(() => downloadBlob(item.blob, item.name), {
-        downloadLabel: t.common.downloadOne,
-        kind: "single",
-      });
-    },
-    [requestDownload, t.common.downloadOne],
+    (item: SmartCompressedItem) => downloadBlob(item.blob, item.name),
+    [],
   );
 
   const downloadZipAll = useCallback(() => {
-    requestDownload(() => downloadZip(items), {
-      downloadLabel: t.common.downloadZip,
-      kind: "zip",
-    });
-  }, [items, requestDownload, t.common.downloadZip]);
+    void downloadZip(items);
+  }, [items]);
 
   return {
     items,
     busy,
-    modal,
     addFiles,
     recompressAll,
     remove,

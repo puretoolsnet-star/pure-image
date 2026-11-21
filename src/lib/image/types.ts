@@ -1,3 +1,5 @@
+import type { ImageContentKind } from "@/lib/image/smart-analyze";
+
 export type OutputFormat = "image/jpeg" | "image/webp" | "image/png" | "image/avif";
 
 export type ProcessedImage = {
@@ -9,6 +11,31 @@ export type ProcessedImage = {
   previewUrl: string;
   width: number;
   height: number;
+  outputMime?: OutputFormat;
+  processingMs?: number;
+  contentKind?: ImageContentKind;
+  estimatedSize?: number;
+  targetKb?: number;
+  targetBytes?: number;
+  appliedQuality?: number;
+  withinLimit?: boolean;
+  deltaBytes?: number;
+  deltaPercent?: number;
+  toSizeWarning?: "tooAggressive" | "cannotMeet" | null;
+  fitMode?: "strict" | "closest";
+  strategy?: "balanced" | "preservePixels";
+  inputMime?: string;
+  hadAlpha?: boolean;
+  beforePreviewUrl?: string;
+  sanitizeWarnings?: string[];
+  originalWidth?: number;
+  originalHeight?: number;
+  presetTag?: string;
+  upscaleWarning?: boolean;
+  cropAspectLabel?: string;
+  transformAngle?: number;
+  transformFlipH?: boolean;
+  transformFlipV?: boolean;
 };
 
 /** Processed output plus original file preview URL for live before/after. */

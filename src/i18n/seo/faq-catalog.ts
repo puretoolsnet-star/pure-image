@@ -10,12 +10,12 @@ export const FAQ_BY_LANG: Record<Lang, Record<CategoryId, PageSeoContent>> = {
       benefitPoints: [
         "Smart, sized, and batch modes",
         "Quality under your control",
-        "Rewarded clip before each download",
+        "Instant local downloads",
       ],
       faqTitle: "Compression FAQ",
       faqs: [
         { question: "Are photos uploaded?", answer: "No — processing uses Canvas only in your browser." },
-        { question: "How do downloads work?", answer: "A short rewarded clip unlocks each file or ZIP — keeping the service free." },
+        { question: "How do downloads work?", answer: "Tap download — files save directly from your browser with no upload or account." },
         { question: "What is smart compress?", answer: "You set quality and max width; output is re-encoded locally." },
       ],
     },
@@ -57,11 +57,11 @@ export const FAQ_BY_LANG: Record<Lang, Record<CategoryId, PageSeoContent>> = {
     compress: {
       benefitsTitle: "Навіщо стискати локально?",
       benefitsLead: "Менші файли — без хмари та серверів.",
-      benefitPoints: ["Розумне, за КБ, пакетно", "Контроль якості", "Ролик перед кожним завантаженням"],
+      benefitPoints: ["Розумне, за КБ, пакетно", "Контроль якості", "Миттєве локальне завантаження"],
       faqTitle: "FAQ стиснення",
       faqs: [
         { question: "Чи завантажуються фото?", answer: "Ні — лише Canvas у браузері." },
-        { question: "Як працює завантаження?", answer: "Короткий ролик відкриває файл або ZIP — сервіс лишається безкоштовним." },
+        { question: "Як працює завантаження?", answer: "Натисніть «Завантажити» — файл або ZIP зберігається з браузера без сервера й обліковки." },
         { question: "Що таке smart?", answer: "Ви задаєте якість і ширину; перекодування локально." },
       ],
     },
@@ -103,11 +103,11 @@ export const FAQ_BY_LANG: Record<Lang, Record<CategoryId, PageSeoContent>> = {
     compress: {
       benefitsTitle: "Warum lokal komprimieren?",
       benefitsLead: "Kleinere Dateien — ohne Cloud.",
-      benefitPoints: ["Smart, KB-Ziel, Stapel", "Qualitätskontrolle", "Clip vor jedem Download"],
+      benefitPoints: ["Smart, KB-Ziel, Stapel", "Qualitätskontrolle", "Sofortiger lokaler Download"],
       faqTitle: "Komprimierung FAQ",
       faqs: [
         { question: "Werden Fotos hochgeladen?", answer: "Nein — nur Canvas im Browser." },
-        { question: "Downloads?", answer: "Ein kurzer Clip entsperrt Datei oder ZIP — kostenlos für alle." },
+        { question: "Downloads?", answer: "Direkt im Browser — ohne Upload und ohne Konto." },
         { question: "Smart-Modus?", answer: "Qualität und Breite wählen; lokal neu kodieren." },
       ],
     },
@@ -149,11 +149,11 @@ export const FAQ_BY_LANG: Record<Lang, Record<CategoryId, PageSeoContent>> = {
     compress: {
       benefitsTitle: "¿Por qué comprimir localmente?",
       benefitsLead: "Archivos más pequeños sin la nube.",
-      benefitPoints: ["Smart, por KB, lote", "Control de calidad", "Clip antes de cada descarga"],
+      benefitPoints: ["Smart, por KB, lote", "Control de calidad", "Descarga local al instante"],
       faqTitle: "FAQ compresión",
       faqs: [
         { question: "¿Se suben las fotos?", answer: "No — solo Canvas en el navegador." },
-        { question: "¿Descargas?", answer: "Un clip corto desbloquea archivo o ZIP." },
+        { question: "¿Descargas?", answer: "Descarga directa en el navegador, sin subidas ni cuenta." },
         { question: "¿Modo smart?", answer: "Eliges calidad y ancho; recodificación local." },
       ],
     },
@@ -195,11 +195,11 @@ export const FAQ_BY_LANG: Record<Lang, Record<CategoryId, PageSeoContent>> = {
     compress: {
       benefitsTitle: "Dlaczego kompresja lokalna?",
       benefitsLead: "Mniejsze pliki — bez chmury.",
-      benefitPoints: ["Smart, do KB, wsadowo", "Kontrola jakości", "Klip przed pobraniem"],
+      benefitPoints: ["Smart, do KB, wsadowo", "Kontrola jakości", "Natychmiastowe lokalne pobieranie"],
       faqTitle: "FAQ kompresji",
       faqs: [
         { question: "Czy zdjęcia są wysyłane?", answer: "Nie — tylko Canvas w przeglądarce." },
-        { question: "Pobieranie?", answer: "Krótki klip odblokowuje plik lub ZIP." },
+        { question: "Pobieranie?", answer: "Bezpośrednio z przeglądarki — bez wysyłania plików i konta." },
         { question: "Tryb smart?", answer: "Ustawiasz jakość i szerokość; lokalne przekodowanie." },
       ],
     },
@@ -241,11 +241,11 @@ export const FAQ_BY_LANG: Record<Lang, Record<CategoryId, PageSeoContent>> = {
     compress: {
       benefitsTitle: "Pourquoi compresser localement ?",
       benefitsLead: "Fichiers plus légers — sans cloud.",
-      benefitPoints: ["Smart, vers Ko, par lot", "Qualité maîtrisée", "Clip avant chaque téléchargement"],
+      benefitPoints: ["Smart, vers Ko, par lot", "Qualité maîtrisée", "Téléchargement local instantané"],
       faqTitle: "FAQ compression",
       faqs: [
         { question: "Les photos sont-elles envoyées ?", answer: "Non — Canvas uniquement dans le navigateur." },
-        { question: "Téléchargements ?", answer: "Un court clip débloque fichier ou ZIP." },
+        { question: "Téléchargements ?", answer: "Fichier ou ZIP enregistré dans le navigateur — sans envoi ni compte." },
         { question: "Mode smart ?", answer: "Vous choisissez qualité et largeur ; encodage local." },
       ],
     },

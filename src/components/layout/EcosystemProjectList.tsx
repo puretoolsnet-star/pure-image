@@ -11,8 +11,10 @@ import Link from "next/link";
 
 import { useI18n } from "@/i18n/context";
 import {
+  CURRENT_ECOSYSTEM_PROJECT_ID,
   ECOSYSTEM_PROJECTS,
   ecosystemHref,
+  isCurrentEcosystemProject,
   type EcosystemProjectId,
 } from "@/lib/ecosystem";
 import { cn } from "@/lib/cn";
@@ -51,12 +53,12 @@ export function EcosystemProjectList({
         const copy = t.ecosystem.items[project.id];
         const Icon = PROJECT_ICONS[project.id];
         const isActive = project.status === "active";
-        const isCurrent = project.id === "pureImage";
+        const isCurrent = isCurrentEcosystemProject(project.id);
         const href = ecosystemHref(project, lang);
         const badgeLabel = isCurrent
           ? t.ecosystem.current
           : isActive
-            ? t.ecosystem.activeHere
+            ? t.ecosystem.openSite
             : t.ecosystem.comingSoon;
 
         const cardClass = cn(

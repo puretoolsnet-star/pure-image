@@ -1,6 +1,9 @@
 import { LANGS, type Lang } from "@/i18n/locales";
 import { localizedPath } from "@/lib/i18n/routing";
 
+/** Canonical id of this deployed app (Pure Image @ img.kixt.net). */
+export const CURRENT_ECOSYSTEM_PROJECT_ID = "pureImage" as const;
+
 export type EcosystemProjectId =
   | "purepdf"
   | "pureQr"
@@ -26,7 +29,14 @@ const pureQrOrigin = origin(process.env.NEXT_PUBLIC_ECOSYSTEM_PUREQR_URL, "https
 const pureTableOrigin = origin(process.env.NEXT_PUBLIC_ECOSYSTEM_PURETABLE_URL, "https://table.kixt.net");
 const pureSignOrigin = origin(process.env.NEXT_PUBLIC_ECOSYSTEM_PURESIGN_URL, "https://sign.kixt.net");
 
-/** Order matches kixt.net network; Pure Image is the current app. */
+/** Shared kixt.net network landing (optional env override). */
+export const KIXT_HUB_ORIGIN = origin(process.env.NEXT_PUBLIC_KIXT_URL, "https://kixt.net");
+
+/**
+ * Single source of truth for cross-site navigation.
+ * Sync this file across PurePDF, PureQR, PureTable, PureSign, Pure Image repos.
+ * Order: PDF → QR → Table → Sign → Image (current).
+ */
 export const ECOSYSTEM_PROJECTS: EcosystemProjectMeta[] = [
   { id: "purepdf", status: "active", href: purepdfOrigin, external: true },
   { id: "pureQr", status: "active", href: pureQrOrigin, external: true },
@@ -42,4 +52,13 @@ export function ecosystemHref(project: EcosystemProjectMeta, lang: Lang): string
   if (!project.external) return localizedPath(lang, project.href);
   const base = project.href.replace(/\/$/, "").replace(langSuffix, "");
   return `${base}/${lang}`;
+}
+
+export function kixtHubHref(lang: Lang): string {
+  const base = KIXT_HUB_ORIGIN.replace(/\/$/, "").replace(langSuffix, "");
+  return `${base}/${lang}`;
+}
+
+export function isCurrentEcosystemProject(id: EcosystemProjectId): boolean {
+  return id === CURRENT_ECOSYSTEM_PROJECT_ID;
 }

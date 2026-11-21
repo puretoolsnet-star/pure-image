@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 import { PrivacyBanner } from "@/components/layout/PrivacyBanner";
+import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { useI18n } from "@/i18n/context";
 import { getCategoryCopy } from "@/i18n/tool-messages";
@@ -64,9 +65,8 @@ export function HomePage() {
             </ul>
           </div>
         </div>
-        <div className="mt-8 hidden pb-10 md:block">
-        </div>
       </div>
+      <SiteFooter />
     </div>
   );
 }

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 
+import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { PrivacyBanner } from "@/components/layout/PrivacyBanner";
 import { useI18n } from "@/i18n/context";
@@ -59,9 +60,8 @@ export function CategoryHub({ categoryId }: { categoryId: CategoryId }) {
             </ul>
           </div>
         </div>
-        <div className="mt-8 hidden pb-10 md:block">
-        </div>
       </div>
+      <SiteFooter />
     </div>
   );
 }

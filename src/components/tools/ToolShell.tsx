@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 import { PrivacyBanner } from "@/components/layout/PrivacyBanner";
+import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { PageSeoSection } from "@/components/seo/PageSeoSection";
 import { useI18n } from "@/i18n/context";
@@ -59,9 +60,8 @@ export function ToolShell({
             <PageSeoSection content={seoContent} />
           </div>
         </div>
-        <div className="mt-8 hidden pb-10 md:block">
-        </div>
       </div>
+      <SiteFooter />
     </div>
   );
 }

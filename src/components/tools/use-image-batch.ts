@@ -1,8 +1,5 @@
 "use client";
 
-const modal = null;
-const requestDownload = (fn: () => unknown, _meta?: unknown) => { void fn(); };
-
 import { useCallback, useRef, useState } from "react";
 
 import type { LivePreviewImage, ProcessedImage } from "@/lib/image/types";
@@ -115,23 +112,15 @@ export function useImageBatch() {
   return {
     items,
     busy,
-    modal,
     run,
     reprocess,
     remove,
     clear,
     sourceCount,
     hasSources: sourceCount > 0,
-    downloadOne: (item: LivePreviewImage) =>
-      requestDownload(() => downloadBlob(item.blob, item.name), {
-        downloadLabel: t.common.downloadOne,
-        kind: "single",
-      }),
-    downloadZip: () =>
-      requestDownload(
-        () => downloadZip(items),
-        { downloadLabel: zipLabel, kind: "zip" },
-      ),
+    downloadOne: (item: LivePreviewImage) => downloadBlob(item.blob, item.name),
+    downloadZip: () => void downloadZip(items),
     zipLabel,
+    getSourceFile: (id: string) => sourcesRef.current.get(id),
   };
 }
