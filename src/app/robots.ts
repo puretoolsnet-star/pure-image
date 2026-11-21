@@ -1,11 +1,14 @@
 import type { MetadataRoute } from "next";
 
-import { absoluteCanonicalUrl } from "@/lib/seo/site";
+import { CANONICAL_SITE_ORIGIN } from "@/lib/seo/site";
 
 export default function robots(): MetadataRoute.Robots {
   return {
-    rules: { userAgent: "*", allow: "/" },
-    sitemap: absoluteCanonicalUrl("/sitemap.xml"),
-    host: "https://img.kixt.net",
+    rules: {
+      userAgent: "*",
+      allow: "/",
+    },
+    sitemap: `${CANONICAL_SITE_ORIGIN}/sitemap.xml`,
+    host: CANONICAL_SITE_ORIGIN,
   };
 }

@@ -3,21 +3,29 @@ import type { MetadataRoute } from "next";
 import { LANGS } from "@/i18n/locales";
 import { localizedPath } from "@/lib/i18n/routing";
 import { buildSitemapLanguageAlternates } from "@/lib/seo/structured-data";
+import { INDEXABLE_PATHS } from "@/lib/seo/sitemap-routes";
 import { absoluteCanonicalUrl } from "@/lib/seo/site";
-import { CATEGORIES, TOOL_ROUTE_IDS } from "@/lib/tools/routes";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
+  const seen = new Set<string>();
   const entries: MetadataRoute.Sitemap = [];
-  const paths = ["/", ...CATEGORIES.map((c) => `/${c}`), ...TOOL_ROUTE_IDS.map((id) => `/${id}`)];
 
-  for (const path of paths) {
+  for (const path of INDEXABLE_PATHS) {
     for (const lang of LANGS) {
+      const url = absoluteCanonicalUrl(localizedPath(lang, path));
+      if (seen.has(url)) continue;
+      seen.add(url);
+
+      const segments = path === "/" ? [] : path.split("/").filter(Boolean);
+      const isHome = path === "/";
+      const isTool = segments.length >= 2;
+
       entries.push({
-        url: absoluteCanonicalUrl(localizedPath(lang, path)),
+        url,
         lastModified,
-        changeFrequency: path === "/" ? "weekly" : "monthly",
-        priority: path === "/" ? 1 : path.split("/").length > 2 ? 0.85 : 0.92,
+        changeFrequency: isHome ? "weekly" : "monthly",
+        priority: isHome ? 1 : isTool ? 0.85 : 0.92,
         alternates: { languages: buildSitemapLanguageAlternates(path) },
       });
     }

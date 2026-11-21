@@ -1,6 +1,7 @@
 import type { Lang } from "@/i18n/locales";
-import { FAQ_BY_LANG } from "@/i18n/seo/faq-catalog";
-import { getToolCopy } from "@/i18n/tool-messages";
+import { CATEGORY_SEO_BY_LANG } from "@/i18n/seo/faq-catalog";
+import { buildToolPageSeo } from "@/i18n/seo/tool-page-seo";
+import { getCategoryCopy } from "@/i18n/tool-messages";
 import type { CategoryId, ToolRouteId } from "@/lib/tools/routes";
 
 export type PageSeoContent = {
@@ -12,11 +13,14 @@ export type PageSeoContent = {
 };
 
 export function getToolSeoContent(routeId: ToolRouteId, lang: Lang): PageSeoContent {
-  const category = routeId.split("/")[0] as CategoryId;
-  const base = FAQ_BY_LANG[lang][category];
-  const tool = getToolCopy(lang, routeId);
+  return buildToolPageSeo(routeId, lang);
+}
+
+export function getCategorySeoContent(categoryId: CategoryId, lang: Lang): PageSeoContent {
+  const base = CATEGORY_SEO_BY_LANG[lang][categoryId];
+  const hub = getCategoryCopy(lang, categoryId);
   return {
     ...base,
-    benefitsLead: `${tool.hint} ${base.benefitsLead}`,
+    benefitsLead: `${hub.hubLead} ${base.benefitsLead}`,
   };
 }

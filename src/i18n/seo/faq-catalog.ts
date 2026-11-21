@@ -2,11 +2,12 @@ import type { Lang } from "@/i18n/locales";
 import type { PageSeoContent } from "@/i18n/seo/page-content";
 import type { CategoryId } from "@/lib/tools/routes";
 
-export const FAQ_BY_LANG: Record<Lang, Record<CategoryId, PageSeoContent>> = {
+export const CATEGORY_SEO_BY_LANG: Record<Lang, Record<CategoryId, PageSeoContent>> = {
   en: {
     compress: {
-      benefitsTitle: "Why compress locally?",
-      benefitsLead: "Smaller images speed up sites and email — without sending files to a cloud.",
+      benefitsTitle: "Why choose browser-side compression?",
+      benefitsLead:
+        "Smart, KB-target, and batch tools shrink JPG/PNG/WebP on Canvas — ideal for CMS uploads, email attachments, and mobile bandwidth.",
       benefitPoints: [
         "Smart, sized, and batch modes",
         "Quality under your control",

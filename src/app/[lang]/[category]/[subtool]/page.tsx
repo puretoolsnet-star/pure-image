@@ -1,7 +1,10 @@
 import { notFound } from "next/navigation";
 
-import { isLang, LANGS } from "@/i18n/locales";
+import { LANGS } from "@/i18n/locales";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { isLang, type Lang } from "@/i18n/locales";
 import { buildToolRouteMetadata } from "@/lib/seo/metadata";
+import { buildToolJsonLd } from "@/lib/seo/structured-data";
 import { ToolPageLoader } from "@/components/tools/ToolPageLoader";
 import { routeFromSegments, TOOLS_BY_CATEGORY } from "@/lib/tools/routes";
 
@@ -26,8 +29,14 @@ export async function generateMetadata({ params }: PageProps) {
 }
 
 export default async function SubtoolPage({ params }: PageProps) {
-  const { category, subtool } = await params;
+  const { lang: raw, category, subtool } = await params;
   const routeId = routeFromSegments(category, subtool);
   if (!routeId) notFound();
-  return <ToolPageLoader routeId={routeId} />;
+  const lang: Lang = isLang(raw) ? raw : "en";
+  return (
+    <>
+      <JsonLd data={buildToolJsonLd(routeId, lang)} />
+      <ToolPageLoader routeId={routeId} />
+    </>
+  );
 }

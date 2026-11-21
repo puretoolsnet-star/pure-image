@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 
+import { JsonLd } from "@/components/seo/JsonLd";
 import { HomePage } from "@/components/home/HomePage";
-import { isLang } from "@/i18n/locales";
+import { isLang, type Lang } from "@/i18n/locales";
 import { buildPageMetadata } from "@/lib/seo/metadata";
+import { buildHomeJsonLd } from "@/lib/seo/structured-data";
 
 type PageProps = { params: Promise<{ lang: string }> };
 
@@ -12,6 +14,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return buildPageMetadata("home", lang);
 }
 
-export default async function Page() {
-  return <HomePage />;
+export default async function Page({ params }: PageProps) {
+  const { lang: raw } = await params;
+  const lang: Lang = isLang(raw) ? raw : "en";
+  return (
+    <>
+      <JsonLd data={buildHomeJsonLd(lang)} />
+      <HomePage />
+    </>
+  );
 }

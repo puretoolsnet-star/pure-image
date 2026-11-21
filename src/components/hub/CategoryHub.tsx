@@ -7,6 +7,8 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { PrivacyBanner } from "@/components/layout/PrivacyBanner";
 import { useI18n } from "@/i18n/context";
+import { PageSeoSection } from "@/components/seo/PageSeoSection";
+import { getCategorySeoContent } from "@/i18n/seo/page-content";
 import { getCategoryCopy, getToolCopy } from "@/i18n/tool-messages";
 import {
   TOOLS_BY_CATEGORY,
@@ -22,6 +24,7 @@ export function CategoryHub({ categoryId }: { categoryId: CategoryId }) {
   const { lang, t } = useI18n();
   const href = useLocalizedPath();
   const hub = getCategoryCopy(lang, categoryId);
+  const seoContent = getCategorySeoContent(categoryId, lang);
   const Icon = CATEGORY_ICONS[categoryId];
   const subtools = TOOLS_BY_CATEGORY[categoryId];
 
@@ -58,6 +61,7 @@ export function CategoryHub({ categoryId }: { categoryId: CategoryId }) {
                 );
               })}
             </ul>
+            <PageSeoSection content={seoContent} />
           </div>
         </div>
       </div>
