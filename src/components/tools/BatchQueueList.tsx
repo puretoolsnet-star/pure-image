@@ -33,7 +33,7 @@ export function BatchQueueList({
   if (!rows.length) return null;
 
   return (
-    <ul className="space-y-2">
+    <ul className="min-w-0 max-w-full space-y-2">
       {rows.map((row) => {
         const active = row.id === focusId;
         const out = row.result?.outputSize;
@@ -45,7 +45,7 @@ export function BatchQueueList({
           <li
             key={row.id}
             className={cn(
-              "glass-card rounded-xl border p-3 transition",
+              "glass-card min-w-0 max-w-full rounded-xl border p-3 transition",
               active ? "border-emerald-500/40" : "border-slate-800/80",
             )}
           >
@@ -185,7 +185,7 @@ function QueueRowHead({
     <button
       type="button"
       onClick={onFocus}
-      className="flex w-full items-start gap-3 text-left"
+      className="flex w-full min-w-0 max-w-full items-start gap-3 text-left"
     >
       <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-lg bg-slate-900">
         {/* eslint-disable-next-line @next/next/no-img-element */}

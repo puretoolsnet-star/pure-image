@@ -164,6 +164,11 @@ export const es: Dictionary = {
     targetSizeHint: "Solo manual: ajusta la calidad hasta ese tamaño.",
     targetSizeOff: "Desactivado",
     dimensions: "Dimensiones",
+    workflowUpload: "Subido",
+    workflowSettings: "Ajustes de compresión",
+    workflowResult: "Resultado",
+    workZoneTitle: "Tu imagen",
+    uploadedStatus: "Listo para comprimir",
   },
   toSizeCompress: {
     lead: "Búsqueda binaria de calidad (y redimensionado si hace falta) hasta tu tope KB — todo local.",
@@ -190,6 +195,11 @@ export const es: Dictionary = {
       "Objetivo KB muy bajo para la resolución — pérdida de detalle o sube el límite.",
     warnCannotMeet:
       "No se alcanzó el límite con esta estrategia — prueba Equilibrado, otro formato o más KB.",
+    workflowUpload: "Subido",
+    workflowSettings: "Límite KB y ajuste",
+    workflowResult: "Resultado",
+    workZoneTitle: "Llegar al KB objetivo",
+    uploadedStatus: "Listo para ajustar",
   },
   batchCompress: {
     lead: "Comprime decenas de fotos en una cola controlada — máx. 2 en paralelo, sin colgar la pestaña. Todo local.",
@@ -216,6 +226,10 @@ export const es: Dictionary = {
     cancelRun: "Pausar",
     detailPreview: "Vista de la selección",
     errorProcessing: "No se pudo comprimir este archivo.",
+    workflowUpload: "Archivos añadidos",
+    workflowSettings: "Ajustes del lote",
+    workflowResult: "Resumen",
+    workZoneTitle: "Cola por lotes",
   },
   webpConvert: {
     lead: "JPG, PNG, GIF, BMP, SVG, HEIC, AVIF… → WebP: con pérdida, sin pérdida o auto. Todo local.",
@@ -237,6 +251,11 @@ export const es: Dictionary = {
     processing: "Codificando WebP…",
     batchTotals: (count, before, after, pct) =>
       `${count} archivos · ${before} → ${after} (${pct >= 0 ? "+" : ""}${pct}% vs originales)`,
+    workflowUpload: "Subido",
+    workflowSettings: "Ajustes WebP",
+    workflowResult: "Resultado",
+    workZoneTitle: "Conversión a WebP",
+    uploadedStatus: "Listo — ajusta los parámetros",
   },
   avifConvert: {
     lead: "JPG, PNG, WebP, GIF, BMP, SVG, HEIC… → AVIF: auto, con o sin pérdida. Ajustes, velocidad, alpha, comparación y lote ZIP. Todo local.",
@@ -274,6 +293,11 @@ export const es: Dictionary = {
     encoding: "Codificando AVIF…",
     batchTotals: (count, before, after, pct) =>
       `${count} archivos · ${before} → ${after} (${pct >= 0 ? "+" : ""}${pct}% vs originales)`,
+    workflowUpload: "Subido",
+    workflowSettings: "Ajustes AVIF",
+    workflowResult: "Resultado",
+    workZoneTitle: "Conversión a AVIF",
+    uploadedStatus: "Listo — ajusta los parámetros",
   },
   heicToJpg: {
     lead: "HEIC/HEIF de iPhone → JPG en el dispositivo. Orientación EXIF, metadatos opcionales, cola, comparar y ZIP con heic2any.",
@@ -303,6 +327,12 @@ export const es: Dictionary = {
       "No se pudo decodificar. En HEIC, exporta de nuevo desde Fotos o comprueba el archivo.",
     errorUnsupported:
       "Tipo no admitido. HEIC, HEIF, JPG, PNG, WebP, GIF o BMP.",
+    converting: "Decodificando y exportando JPG…",
+    workflowUpload: "Subido",
+    workflowSettings: "Ajustes JPG",
+    workflowResult: "Resultado",
+    workZoneTitle: "HEIC → JPG",
+    uploadedStatus: "JPG listo",
   },
   pngToJpg: {
     lead: "PNG → JPG en el navegador: transparencia sobre blanco, negro o color. Ajustes, tamaño objetivo, cola, comparar y ZIP.",
@@ -338,6 +368,12 @@ export const es: Dictionary = {
     detailPreview: "Comparar selección",
     errorNotPng: "Solo se aceptan archivos PNG aquí.",
     errorProcessing: "No se pudo convertir el PNG.",
+    converting: "Aplanando transparencia y exportando JPG…",
+    workflowUpload: "Archivos añadidos",
+    workflowSettings: "Fondo y ajustes JPG",
+    workflowResult: "Resultado",
+    workZoneTitle: "PNG → JPG",
+    uploadedStatus: "JPG listo",
   },
   svgConvert: {
     lead: "SVG → PNG o JPG en el navegador: 1×–8×, presets, viewBox, cola, zoom 8×, ZIP.",
@@ -376,6 +412,12 @@ export const es: Dictionary = {
     errorNotSvg: "Solo archivos .svg.",
     errorParse: "SVG no válido — revise XML/viewBox.",
     errorProcessing: "Fallo al renderizar — simplifique o baje tamaño.",
+    converting: "Rasterizando SVG…",
+    workflowUpload: "SVG añadido",
+    workflowSettings: "Formato y tamaño",
+    workflowResult: "Resultado",
+    workZoneTitle: "Exportar SVG",
+    uploadedStatus: "Raster listo",
   },
   resizeTool: {
     lead: "Redimensionar en px o %, Fit/Fill/Stretch, presets sociales y 4K, formato, cola, comparar y ZIP — local.",
@@ -409,6 +451,12 @@ export const es: Dictionary = {
     afterLabel: "Redimensionado",
     detailPreview: "Comparar selección",
     errorProcessing: "No se pudo redimensionar.",
+    converting: "Redimensionando…",
+    workflowUpload: "Archivos añadidos",
+    workflowSettings: "Tamaño y ajuste",
+    workflowResult: "Resultado",
+    workZoneTitle: "Cola de resize",
+    uploadedStatus: "Listo",
   },
   pdfAlbumTool: {
     lead:
@@ -458,6 +506,12 @@ export const es: Dictionary = {
     building: "Generando PDF…",
     addPagesHint: "Añade al menos una imagen.",
     downloadZipPages: "Descargar todas las páginas (ZIP)",
+    workflowUpload: "Fotos añadidas",
+    workflowSettings: "Diseño PDF",
+    workflowResult: "Descarga",
+    workZoneTitle: "Fotos a PDF",
+    uploadedStatus: "Listo para crear PDF",
+    pageCountLine: (n) => (n === 1 ? "1 página" : `${n} páginas`),
   },
   scanEnhanceTool: {
     lead:
@@ -499,6 +553,13 @@ export const es: Dictionary = {
     beforeLabel: "Escaneo original",
     afterLabel: "Mejorado",
     errorProcessing: "No se pudo mejorar este escaneo.",
+    detailPreview: "Comparar legibilidad",
+    converting: "Mejorando escaneo…",
+    workflowUpload: "Escaneo añadido",
+    workflowSettings: "Presets y controles",
+    workflowResult: "Resultado",
+    workZoneTitle: "Mejora de escaneos",
+    uploadedStatus: "Listo",
   },
   rotateTool: {
     lead:
@@ -536,6 +597,13 @@ export const es: Dictionary = {
     beforeLabel: "Original",
     afterLabel: "Transformado",
     errorProcessing: "No se pudo transformar este archivo.",
+    detailPreview: "Vista previa de la transformación",
+    converting: "Aplicando giro y espejo…",
+    workflowUpload: "Archivos añadidos",
+    workflowSettings: "Ángulo y espejo",
+    workflowResult: "Resultado",
+    workZoneTitle: "Girar y espejar",
+    uploadedStatus: "Transformación lista",
   },
   cropTool: {
     lead:
@@ -576,6 +644,13 @@ export const es: Dictionary = {
     beforeLabel: "Original",
     afterLabel: "Recortado",
     errorProcessing: "No se pudo recortar este archivo.",
+    detailPreview: "Vista previa del recorte",
+    converting: "Recortando…",
+    workflowUpload: "Archivos añadidos",
+    workflowSettings: "Proporción y marco",
+    workflowResult: "Resultado",
+    workZoneTitle: "Recorte por proporción",
+    uploadedStatus: "Recorte listo",
   },
   socialPresets: {
     lead:
@@ -642,5 +717,12 @@ export const es: Dictionary = {
     beforeLabel: "Original",
     afterLabel: "Exportación preset",
     errorProcessing: "No se pudo exportar esta imagen.",
+    detailPreview: "Vista previa del archivo seleccionado",
+    converting: "Aplicando preset…",
+    workflowUpload: "Archivos añadidos",
+    workflowSettings: "Preset y encuadre",
+    workflowResult: "Resultado",
+    workZoneTitle: "Exportación social",
+    uploadedStatus: "Exportación lista",
   },
 };

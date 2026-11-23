@@ -23,22 +23,35 @@ export function ToSizeMetricsPanel({
   const { t } = useI18n();
   if (!item) return null;
 
+  const awaitingOutput = Boolean(item.pending);
   const targetKb = item.targetKb ?? 0;
-  const saved = Math.max(0, item.originalSize - item.outputSize);
+  const saved = awaitingOutput ? 0 : Math.max(0, item.originalSize - item.outputSize);
   const pct =
-    item.originalSize > 0 ? Math.round((saved / item.originalSize) * 100) : 0;
-  const within = item.withinLimit ?? item.outputSize <= (item.targetBytes ?? targetKb * 1024);
-  const delta = item.deltaBytes ?? item.outputSize - targetKb * 1024;
+    !awaitingOutput && item.originalSize > 0
+      ? Math.round((saved / item.originalSize) * 100)
+      : 0;
+  const within =
+    !awaitingOutput &&
+    (item.withinLimit ?? item.outputSize <= (item.targetBytes ?? targetKb * 1024));
+  const delta =
+    awaitingOutput ? 0 : (item.deltaBytes ?? item.outputSize - targetKb * 1024);
 
   return (
     <div className="glass-card rounded-2xl border-emerald-500/15 p-4 sm:p-5">
-      <StatusHeader within={within} busy={busy} t={t} />
+      <StatusHeader within={within} busy={busy || awaitingOutput} t={t} />
       <dl className="grid grid-cols-2 gap-3 text-xs sm:grid-cols-3 lg:grid-cols-6">
         <Cell label={t.labels.original} value={formatBytes(item.originalSize)} />
         <Cell label={t.toSizeCompress.targetLabel} value={formatBytes(targetKb * 1024)} accent="violet" />
-        <Cell label={t.smartCompress.actual} value={formatBytes(item.outputSize)} accent="emerald" />
-        <Cell label={t.toSizeCompress.deltaLabel} value={formatDelta(delta, t)} />
-        <Cell label={t.smartCompress.reduction} value={`${pct}%`} />
+        <Cell
+          label={t.smartCompress.actual}
+          value={awaitingOutput ? "…" : formatBytes(item.outputSize)}
+          accent="emerald"
+        />
+        <Cell
+          label={t.toSizeCompress.deltaLabel}
+          value={awaitingOutput ? "…" : formatDelta(delta, t)}
+        />
+        <Cell label={t.smartCompress.reduction} value={awaitingOutput ? "…" : `${pct}%`} />
         <Cell
           label={t.toSizeCompress.qualityUsed}
           value={
@@ -46,7 +59,10 @@ export function ToSizeMetricsPanel({
           }
         />
         <Cell label={t.smartCompress.outputFormat} value={mimeLabel(item.outputMime, t)} />
-        <Cell label={t.smartCompress.dimensions} value={`${item.width}×${item.height}`} />
+        <Cell
+          label={t.smartCompress.dimensions}
+          value={item.width > 0 && item.height > 0 ? `${item.width}×${item.height}` : "…"}
+        />
         <Cell
           label={t.smartCompress.processingTime}
           value={

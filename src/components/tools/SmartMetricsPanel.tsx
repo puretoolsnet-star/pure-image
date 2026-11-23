@@ -46,8 +46,10 @@ export function SmartMetricsPanel({
   const { t } = useI18n();
   if (!item) return null;
 
-  const saved = Math.max(0, item.originalSize - item.outputSize);
-  const pct = item.originalSize > 0 ? Math.round((saved / item.originalSize) * 100) : 0;
+  const awaitingOutput = Boolean(item.pending);
+  const saved = awaitingOutput ? 0 : Math.max(0, item.originalSize - item.outputSize);
+  const pct =
+    !awaitingOutput && item.originalSize > 0 ? Math.round((saved / item.originalSize) * 100) : 0;
   const est = pendingEstimate ?? item.estimatedSize ?? null;
   const estSaved =
     est != null && item.originalSize > est ? Math.round(((item.originalSize - est) / item.originalSize) * 100) : null;
@@ -67,10 +69,16 @@ export function SmartMetricsPanel({
       <dl className="grid grid-cols-2 gap-3 text-xs sm:grid-cols-3 lg:grid-cols-6">
         <Metric label={t.labels.original} value={formatBytes(item.originalSize)} />
         <Metric
-          label={busy ? t.smartCompress.savingsPreview : t.smartCompress.actual}
-          value={busy && est != null ? formatBytes(est) : formatBytes(item.outputSize)}
+          label={busy || awaitingOutput ? t.smartCompress.savingsPreview : t.smartCompress.actual}
+          value={
+            awaitingOutput
+              ? "…"
+              : busy && est != null
+                ? formatBytes(est)
+                : formatBytes(item.outputSize)
+          }
           accent="emerald"
-          pulse={busy && est != null}
+          pulse={(busy && est != null) || awaitingOutput}
         />
         <Metric
           label={t.smartCompress.reduction}
@@ -91,7 +99,10 @@ export function SmartMetricsPanel({
             png: t.toolUi.formatPng,
           })}
         />
-        <Metric label={t.smartCompress.dimensions} value={`${item.width}×${item.height}`} />
+        <Metric
+          label={t.smartCompress.dimensions}
+          value={item.width > 0 && item.height > 0 ? `${item.width}×${item.height}` : "…"}
+        />
         <Metric
           label={t.smartCompress.processingTime}
           value={

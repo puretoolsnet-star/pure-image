@@ -151,6 +151,11 @@ export type Dictionary = {
     targetSizeHint: string;
     targetSizeOff: string;
     dimensions: string;
+    workflowUpload: string;
+    workflowSettings: string;
+    workflowResult: string;
+    workZoneTitle: string;
+    uploadedStatus: string;
   };
   toSizeCompress: {
     lead: string;
@@ -175,6 +180,11 @@ export type Dictionary = {
     tuning: string;
     warnTooAggressive: string;
     warnCannotMeet: string;
+    workflowUpload: string;
+    workflowSettings: string;
+    workflowResult: string;
+    workZoneTitle: string;
+    uploadedStatus: string;
   };
   batchCompress: {
     lead: string;
@@ -200,6 +210,10 @@ export type Dictionary = {
     cancelRun: string;
     detailPreview: string;
     errorProcessing: string;
+    workflowUpload: string;
+    workflowSettings: string;
+    workflowResult: string;
+    workZoneTitle: string;
   };
   webpConvert: {
     lead: string;
@@ -220,6 +234,11 @@ export type Dictionary = {
     webpLabel: string;
     processing: string;
     batchTotals: (count: number, before: string, after: string, pct: number) => string;
+    workflowUpload: string;
+    workflowSettings: string;
+    workflowResult: string;
+    workZoneTitle: string;
+    uploadedStatus: string;
   };
   avifConvert: {
     lead: string;
@@ -252,6 +271,11 @@ export type Dictionary = {
     avifLabel: string;
     encoding: string;
     batchTotals: (count: number, before: string, after: string, pct: number) => string;
+    workflowUpload: string;
+    workflowSettings: string;
+    workflowResult: string;
+    workZoneTitle: string;
+    uploadedStatus: string;
   };
   heicToJpg: {
     lead: string;
@@ -276,6 +300,12 @@ export type Dictionary = {
     detailPreview: string;
     errorDecode: string;
     errorUnsupported: string;
+    converting: string;
+    workflowUpload: string;
+    workflowSettings: string;
+    workflowResult: string;
+    workZoneTitle: string;
+    uploadedStatus: string;
   };
   pngToJpg: {
     lead: string;
@@ -310,6 +340,12 @@ export type Dictionary = {
     detailPreview: string;
     errorNotPng: string;
     errorProcessing: string;
+    converting: string;
+    workflowUpload: string;
+    workflowSettings: string;
+    workflowResult: string;
+    workZoneTitle: string;
+    uploadedStatus: string;
   };
   svgConvert: {
     lead: string;
@@ -348,6 +384,12 @@ export type Dictionary = {
     errorNotSvg: string;
     errorParse: string;
     errorProcessing: string;
+    converting: string;
+    workflowUpload: string;
+    workflowSettings: string;
+    workflowResult: string;
+    workZoneTitle: string;
+    uploadedStatus: string;
   };
   resizeTool: {
     lead: string;
@@ -380,6 +422,12 @@ export type Dictionary = {
     afterLabel: string;
     detailPreview: string;
     errorProcessing: string;
+    converting: string;
+    workflowUpload: string;
+    workflowSettings: string;
+    workflowResult: string;
+    workZoneTitle: string;
+    uploadedStatus: string;
   };
   pdfAlbumTool: {
     lead: string;
@@ -428,6 +476,12 @@ export type Dictionary = {
     building: string;
     addPagesHint: string;
     downloadZipPages: string;
+    workflowUpload: string;
+    workflowSettings: string;
+    workflowResult: string;
+    workZoneTitle: string;
+    uploadedStatus: string;
+    pageCountLine: (n: number) => string;
   };
   scanEnhanceTool: {
     lead: string;
@@ -458,6 +512,13 @@ export type Dictionary = {
     beforeLabel: string;
     afterLabel: string;
     errorProcessing: string;
+    detailPreview: string;
+    converting: string;
+    workflowUpload: string;
+    workflowSettings: string;
+    workflowResult: string;
+    workZoneTitle: string;
+    uploadedStatus: string;
   };
   rotateTool: {
     lead: string;
@@ -494,6 +555,13 @@ export type Dictionary = {
     beforeLabel: string;
     afterLabel: string;
     errorProcessing: string;
+    detailPreview: string;
+    converting: string;
+    workflowUpload: string;
+    workflowSettings: string;
+    workflowResult: string;
+    workZoneTitle: string;
+    uploadedStatus: string;
   };
   cropTool: {
     lead: string;
@@ -533,6 +601,13 @@ export type Dictionary = {
     beforeLabel: string;
     afterLabel: string;
     errorProcessing: string;
+    detailPreview: string;
+    converting: string;
+    workflowUpload: string;
+    workflowSettings: string;
+    workflowResult: string;
+    workZoneTitle: string;
+    uploadedStatus: string;
   };
   socialPresets: {
     lead: string;
@@ -587,6 +662,13 @@ export type Dictionary = {
     beforeLabel: string;
     afterLabel: string;
     errorProcessing: string;
+    detailPreview: string;
+    converting: string;
+    workflowUpload: string;
+    workflowSettings: string;
+    workflowResult: string;
+    workZoneTitle: string;
+    uploadedStatus: string;
   };
 };
 

@@ -10,6 +10,21 @@ function makeId(): string {
   return `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 }
 
+function makePendingItem(id: string, file: File, sourcePreviewUrl: string): LivePreviewImage {
+  return {
+    id,
+    name: file.name,
+    originalSize: file.size,
+    outputSize: 0,
+    blob: new Blob(),
+    previewUrl: sourcePreviewUrl,
+    sourcePreviewUrl,
+    width: 0,
+    height: 0,
+    pending: true,
+  };
+}
+
 export function useImageBatch() {
   const { t } = useI18n();
   const sourcesRef = useRef<Map<string, File>>(new Map());
@@ -59,20 +74,35 @@ export function useImageBatch() {
       if (!files.length) return;
       setBusy(true);
       try {
-        const appended: LivePreviewImage[] = [];
         for (const file of files) {
+          const id = makeId();
+          const sourcePreviewUrl = URL.createObjectURL(file);
+          sourcesRef.current.set(id, file);
+          sourceUrlsRef.current.set(id, sourcePreviewUrl);
+          setItems((prev) => [...prev, makePendingItem(id, file, sourcePreviewUrl)]);
+          setSourceCount(sourcesRef.current.size);
           try {
-            const id = makeId();
-            sourcesRef.current.set(id, file);
-            sourceUrlsRef.current.set(id, URL.createObjectURL(file));
             const result = await worker(file);
-            if (result) appended.push(attachLiveMeta(id, { ...result, id }));
+            if (result) {
+              setItems((prev) =>
+                prev.map((item) =>
+                  item.id === id ? attachLiveMeta(id, { ...result, id, pending: false }) : item,
+                ),
+              );
+            } else {
+              setItems((prev) => prev.filter((item) => item.id !== id));
+              sourcesRef.current.delete(id);
+              URL.revokeObjectURL(sourcePreviewUrl);
+              sourceUrlsRef.current.delete(id);
+            }
           } catch {
-            /* skip */
+            setItems((prev) => prev.filter((item) => item.id !== id));
+            sourcesRef.current.delete(id);
+            URL.revokeObjectURL(sourcePreviewUrl);
+            sourceUrlsRef.current.delete(id);
           }
         }
         setSourceCount(sourcesRef.current.size);
-        setItems((prev) => [...prev, ...appended]);
       } finally {
         setBusy(false);
       }

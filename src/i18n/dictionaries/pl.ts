@@ -164,6 +164,11 @@ export const pl: Dictionary = {
     targetSizeHint: "Tylko tryb ręczny — dopasowuje jakość do rozmiaru.",
     targetSizeOff: "Wył.",
     dimensions: "Wymiary",
+    workflowUpload: "Wgrano",
+    workflowSettings: "Ustawienia kompresji",
+    workflowResult: "Wynik",
+    workZoneTitle: "Twój obraz",
+    uploadedStatus: "Gotowe do kompresji",
   },
   toSizeCompress: {
     lead: "Wyszukiwanie jakości (i inteligentny resize w razie potrzeby) do limitu KB — tylko w przeglądarce.",
@@ -190,6 +195,11 @@ export const pl: Dictionary = {
       "Cel KB bardzo mały dla tej rozdzielczości — spodziewaj się miękkiego obrazu lub podnieś limit.",
     warnCannotMeet:
       "Nie udało się zmieścić w limicie — spróbuj Balans, inny format lub wyższy KB.",
+    workflowUpload: "Wgrano",
+    workflowSettings: "Limit KB i dopasowanie",
+    workflowResult: "Wynik",
+    workZoneTitle: "Osiągnięcie celu KB",
+    uploadedStatus: "Gotowe do dopasowania",
   },
   batchCompress: {
     lead: "Kompresuj wiele zdjęć w kontrolowanej kolejce — max. 2 naraz, bez zawieszania karty. Tylko lokalnie.",
@@ -216,6 +226,10 @@ export const pl: Dictionary = {
     cancelRun: "Wstrzymaj",
     detailPreview: "Podgląd wyboru",
     errorProcessing: "Nie udało się skompresować pliku.",
+    workflowUpload: "Pliki dodane",
+    workflowSettings: "Ustawienia wsadu",
+    workflowResult: "Podsumowanie",
+    workZoneTitle: "Kolejka wsadowa",
   },
   webpConvert: {
     lead: "JPG, PNG, GIF, BMP, SVG, HEIC, AVIF… → WebP: lossy, lossless lub auto. Tylko lokalnie.",
@@ -237,6 +251,11 @@ export const pl: Dictionary = {
     processing: "Kodowanie WebP…",
     batchTotals: (count, before, after, pct) =>
       `${count} plików · ${before} → ${after} (${pct >= 0 ? "+" : ""}${pct}% vs oryginały)`,
+    workflowUpload: "Wgrano",
+    workflowSettings: "Ustawienia WebP",
+    workflowResult: "Wynik",
+    workZoneTitle: "Konwersja WebP",
+    uploadedStatus: "Gotowe — dostosuj parametry",
   },
   avifConvert: {
     lead: "JPG, PNG, WebP, GIF, BMP, SVG, HEIC… → AVIF: auto, stratny lub bezstratny. Presety, szybkość, alpha, porównanie i paczka ZIP. Tylko lokalnie.",
@@ -274,6 +293,11 @@ export const pl: Dictionary = {
     encoding: "Kodowanie AVIF…",
     batchTotals: (count, before, after, pct) =>
       `${count} plików · ${before} → ${after} (${pct >= 0 ? "+" : ""}${pct}% vs oryginały)`,
+    workflowUpload: "Wgrano",
+    workflowSettings: "Ustawienia AVIF",
+    workflowResult: "Wynik",
+    workZoneTitle: "Konwersja AVIF",
+    uploadedStatus: "Gotowe — dostosuj parametry",
   },
   heicToJpg: {
     lead: "HEIC/HEIF z iPhone → JPG lokalnie. Orientacja EXIF, metadane opcjonalnie, kolejka, porównanie i ZIP (heic2any).",
@@ -303,6 +327,12 @@ export const pl: Dictionary = {
       "Nie udało się zdekodować. Dla HEIC spróbuj innego eksportu lub sprawdź plik.",
     errorUnsupported:
       "Nieobsługiwany typ. HEIC, HEIF, JPG, PNG, WebP, GIF lub BMP.",
+    converting: "Dekodowanie i eksport JPG…",
+    workflowUpload: "Wgrano",
+    workflowSettings: "Ustawienia JPG",
+    workflowResult: "Wynik",
+    workZoneTitle: "HEIC → JPG",
+    uploadedStatus: "JPG gotowy",
   },
   pngToJpg: {
     lead: "PNG → JPG w przeglądarce: przezroczystość na biały, czarny lub własny kolor. Presety, cel KB, kolejka, porównanie i ZIP.",
@@ -338,6 +368,12 @@ export const pl: Dictionary = {
     detailPreview: "Porównaj wybrane",
     errorNotPng: "Ten moduł przyjmuje tylko pliki PNG.",
     errorProcessing: "Nie udało się przekonwertować PNG.",
+    converting: "Wypełnianie przezroczystości i eksport JPG…",
+    workflowUpload: "Pliki dodane",
+    workflowSettings: "Tło i ustawienia JPG",
+    workflowResult: "Wynik",
+    workZoneTitle: "PNG → JPG",
+    uploadedStatus: "JPG gotowy",
   },
   svgConvert: {
     lead: "SVG → PNG lub JPG w przeglądarce: 1×–8×, presety pikseli, viewBox, kolejka, zoom 8×, ZIP.",
@@ -376,6 +412,12 @@ export const pl: Dictionary = {
     errorNotSvg: "Tylko pliki .svg.",
     errorParse: "Nie można sparsować SVG.",
     errorProcessing: "Render nieudany — uprość lub zmniejsz rozmiar.",
+    converting: "Rasteryzacja SVG…",
+    workflowUpload: "Dodano SVG",
+    workflowSettings: "Format i rozmiar",
+    workflowResult: "Wynik",
+    workZoneTitle: "Eksport SVG",
+    uploadedStatus: "Raster gotowy",
   },
   resizeTool: {
     lead: "Zmiana rozmiaru: px lub %, Fit/Fill/Stretch, presety social i 4K, format, kolejka, porównanie i ZIP — lokalnie.",
@@ -409,6 +451,12 @@ export const pl: Dictionary = {
     afterLabel: "Po resize",
     detailPreview: "Porównaj wybrane",
     errorProcessing: "Nie udało się zmienić rozmiaru.",
+    converting: "Zmiana rozmiaru…",
+    workflowUpload: "Pliki dodane",
+    workflowSettings: "Rozmiar i dopasowanie",
+    workflowResult: "Wynik",
+    workZoneTitle: "Kolejka zmiany rozmiaru",
+    uploadedStatus: "Gotowe",
   },
   pdfAlbumTool: {
     lead:
@@ -458,6 +506,13 @@ export const pl: Dictionary = {
     building: "Tworzenie PDF…",
     addPagesHint: "Dodaj co najmniej jeden obraz.",
     downloadZipPages: "Pobierz wszystkie strony (ZIP)",
+    workflowUpload: "Zdjęcia dodane",
+    workflowSettings: "Układ PDF",
+    workflowResult: "Pobieranie",
+    workZoneTitle: "Zdjęcia do PDF",
+    uploadedStatus: "Gotowe do PDF",
+    pageCountLine: (n) =>
+      n === 1 ? "1 strona" : n < 5 ? `${n} strony` : `${n} stron`,
   },
   scanEnhanceTool: {
     lead:
@@ -499,6 +554,13 @@ export const pl: Dictionary = {
     beforeLabel: "Oryginalny skan",
     afterLabel: "Po ulepszeniu",
     errorProcessing: "Nie udało się ulepszyć skanu.",
+    detailPreview: "Porównanie czytelności",
+    converting: "Ulepszanie skanu…",
+    workflowUpload: "Skan dodany",
+    workflowSettings: "Presety i suwaki",
+    workflowResult: "Wynik",
+    workZoneTitle: "Ulepszanie skanów",
+    uploadedStatus: "Gotowe",
   },
   rotateTool: {
     lead:
@@ -536,6 +598,13 @@ export const pl: Dictionary = {
     beforeLabel: "Oryginał",
     afterLabel: "Po transformacji",
     errorProcessing: "Nie udało się przekształcić pliku.",
+    detailPreview: "Podgląd obrotu i odbicia",
+    converting: "Stosowanie obrotu i odbicia…",
+    workflowUpload: "Pliki dodane",
+    workflowSettings: "Kąt i lustro",
+    workflowResult: "Wynik",
+    workZoneTitle: "Obrót i lustro",
+    uploadedStatus: "Transformacja gotowa",
   },
   cropTool: {
     lead:
@@ -576,6 +645,13 @@ export const pl: Dictionary = {
     beforeLabel: "Oryginał",
     afterLabel: "Po kadrowaniu",
     errorProcessing: "Nie udało się przyciąć tego pliku.",
+    detailPreview: "Podgląd wyniku kadrowania",
+    converting: "Kadrowanie…",
+    workflowUpload: "Pliki dodane",
+    workflowSettings: "Proporcje i ramka",
+    workflowResult: "Wynik",
+    workZoneTitle: "Kadrowanie wg proporcji",
+    uploadedStatus: "Kadrowanie gotowe",
   },
   socialPresets: {
     lead:
@@ -642,5 +718,12 @@ export const pl: Dictionary = {
     beforeLabel: "Oryginał",
     afterLabel: "Po presecie",
     errorProcessing: "Nie udało się wyeksportować tego obrazu.",
+    detailPreview: "Podgląd eksportu wybranego pliku",
+    converting: "Stosowanie presetu…",
+    workflowUpload: "Pliki dodane",
+    workflowSettings: "Preset i kadrowanie",
+    workflowResult: "Wynik",
+    workZoneTitle: "Eksport social",
+    uploadedStatus: "Eksport gotowy",
   },
 };

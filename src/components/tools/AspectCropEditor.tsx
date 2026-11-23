@@ -164,6 +164,7 @@ export function AspectCropEditor({
 
   const onPointerDown = (e: React.PointerEvent) => {
     if (!file || disabled) return;
+    e.preventDefault();
     const { nx, ny } = pointerToNorm(e.clientX, e.clientY);
     dragRef.current = {
       mode: hitHandle(nx, ny),
@@ -177,6 +178,7 @@ export function AspectCropEditor({
   const onPointerMove = (e: React.PointerEvent) => {
     const drag = dragRef.current;
     if (!drag) return;
+    e.preventDefault();
     const { nx, ny } = pointerToNorm(e.clientX, e.clientY);
     const dx = nx - drag.ox;
     const dy = ny - drag.oy;

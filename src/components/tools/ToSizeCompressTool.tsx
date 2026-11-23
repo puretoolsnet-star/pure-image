@@ -1,7 +1,7 @@
 "use client";
 
 import { Download, Loader2, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import type { CompareMode } from "@/components/tools/BeforeAfterToggle";
 import { BeforeAfterToggle } from "@/components/tools/BeforeAfterToggle";
@@ -9,9 +9,13 @@ import { ImageDropzone } from "@/components/tools/ImageDropzone";
 import { SmartCompareSlider } from "@/components/tools/SmartCompareSlider";
 import { ToSizeControls } from "@/components/tools/ToSizeControls";
 import { ToSizeMetricsPanel } from "@/components/tools/ToSizeMetricsPanel";
+import { ToolFileStrip } from "@/components/tools/ToolFileStrip";
+import { ToolSinglePreview } from "@/components/tools/ToolSinglePreview";
+import { ToolUploadedFileCard } from "@/components/tools/ToolUploadedFileCard";
+import { ToolWorkflowSteps, type WorkflowStepState } from "@/components/tools/ToolWorkflowSteps";
 import { useToSizeCompress } from "@/components/tools/use-to-size-compress";
 import { useI18n } from "@/i18n/context";
-import { cn } from "@/lib/cn";
+import { formatBytes } from "@/lib/image/estimate";
 
 const TO_SIZE_ACCEPT = "image/jpeg,image/png,image/webp";
 
@@ -19,87 +23,172 @@ export function ToSizeCompressTool() {
   const { t } = useI18n();
   const [compare, setCompare] = useState<CompareMode>("split");
   const size = useToSizeCompress();
+  const workZoneRef = useRef<HTMLElement>(null);
+  const hadWorkRef = useRef(false);
 
-  const sampleSize = size.getSourceFile?.(size.focusItem?.id ?? "")?.size ?? null;
+  const hasWork = size.hasSources || size.items.length > 0;
+  const item = size.focusItem;
+  const awaitingFirstOutput = Boolean(item?.pending);
+  const resultReady = Boolean(item && !item.pending && item.outputSize > 0);
+
+  const sampleSize = size.getSourceFile?.(item?.id ?? "")?.size ?? null;
+
+  const workflowSteps = useMemo((): { label: string; state: WorkflowStepState }[] => {
+    const settingsState: WorkflowStepState = !hasWork
+      ? "upcoming"
+      : awaitingFirstOutput || size.busy
+        ? "current"
+        : "done";
+    const resultState: WorkflowStepState = !hasWork
+      ? "upcoming"
+      : resultReady && !size.busy
+        ? "done"
+        : "current";
+
+    return [
+      { label: t.toSizeCompress.workflowUpload, state: hasWork ? "done" : "upcoming" },
+      { label: t.toSizeCompress.workflowSettings, state: settingsState },
+      { label: t.toSizeCompress.workflowResult, state: resultState },
+    ];
+  }, [hasWork, size.busy, awaitingFirstOutput, resultReady, t]);
+
+  const statusDetail = useMemo(() => {
+    if (!item || awaitingFirstOutput || size.busy) return null;
+    const within =
+      item.withinLimit ?? item.outputSize <= (item.targetBytes ?? size.targetKb * 1024);
+    return `${size.targetKb} KB · ${within ? t.toSizeCompress.statusWithin : t.toSizeCompress.statusOver}`;
+  }, [item, awaitingFirstOutput, size.busy, size.targetKb, t]);
+
+  useEffect(() => {
+    if (hasWork && !hadWorkRef.current) {
+      requestAnimationFrame(() => {
+        workZoneRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+    hadWorkRef.current = hasWork;
+  }, [hasWork]);
 
   return (
-    <div className="space-y-6">
-      <p className="text-sm leading-relaxed text-slate-400">{t.toSizeCompress.lead}</p>
-      <ImageDropzone onFiles={size.onFiles} accept={TO_SIZE_ACCEPT} />
-
-      <ToSizeControls
-        targetKb={size.targetKb}
-        onTargetKb={size.setTargetKb}
-        maxWidth={size.maxWidth}
-        onMaxWidth={size.setMaxWidth}
-        fitMode={size.fitMode}
-        onFitMode={size.setFitMode}
-        strategy={size.strategy}
-        onStrategy={size.setStrategy}
-        format={size.format}
-        onFormat={size.setFormat}
-        sampleSize={sampleSize ?? size.focusItem?.originalSize}
-        disabled={size.busy}
-      />
-
-      {size.busy && !size.items.length ? (
-        <p className="flex items-center justify-center gap-2 text-sm text-violet-300">
-          <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
-          {t.toSizeCompress.tuning}
-        </p>
+    <div className="min-w-0 space-y-4 overflow-x-hidden sm:space-y-5">
+      {!hasWork ? (
+        <>
+          <p className="text-sm leading-relaxed text-slate-400">{t.toSizeCompress.lead}</p>
+          <ImageDropzone onFiles={size.onFiles} accept={TO_SIZE_ACCEPT} />
+        </>
       ) : null}
 
-      {size.focusItem ? (
-        <section className="space-y-4">
-          {size.items.length > 1 ? (
-            <FileStrip
-              items={size.items}
-              activeId={size.focusItem.id}
-              onSelect={size.setFocusId}
-            />
-          ) : null}
+      {hasWork && item ? (
+        <section
+          ref={workZoneRef}
+          id="to-size-compress-work"
+          className="scroll-mt-24 space-y-4 rounded-2xl border border-slate-800/80 bg-slate-900/35 p-3 sm:p-4"
+          aria-labelledby="to-size-work-heading"
+        >
+          <div className="min-w-0 space-y-3">
+            <div className="flex flex-wrap items-start justify-between gap-2">
+              <h2 id="to-size-work-heading" className="text-sm font-semibold text-white sm:text-base">
+                {t.toSizeCompress.workZoneTitle}
+              </h2>
+              <ToolWorkflowSteps steps={workflowSteps} />
+            </div>
 
-          <BeforeAfterToggle mode={compare} onChange={setCompare} />
-
-          {compare === "split" ? (
-            <SmartCompareSlider
-              beforeSrc={size.focusItem.sourcePreviewUrl}
-              afterSrc={size.focusItem.previewUrl}
-              busy={size.busy}
-            />
-          ) : (
-            <SinglePreview
-              src={
-                compare === "before"
-                  ? size.focusItem.sourcePreviewUrl
-                  : size.focusItem.previewUrl
+            <ToolUploadedFileCard
+              name={item.name}
+              size={formatBytes(item.originalSize)}
+              thumbSrc={item.sourcePreviewUrl}
+              busy={awaitingFirstOutput || (size.busy && !resultReady)}
+              statusLabel={
+                awaitingFirstOutput
+                  ? t.toSizeCompress.tuning
+                  : size.busy
+                    ? t.toSizeCompress.tuning
+                    : (statusDetail ?? t.toSizeCompress.uploadedStatus)
               }
-              label={compare === "before" ? t.livePreview.before : t.livePreview.after}
-              busy={size.busy}
             />
-          )}
-
-          <ToSizeMetricsPanel item={size.focusItem} busy={size.busy} />
-
-          <div className="flex gap-2">
-            <button
-              type="button"
-              disabled={size.busy}
-              onClick={() => size.downloadOne(size.focusItem!)}
-              className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 px-4 py-3 text-sm font-semibold text-slate-950 hover:from-emerald-500 hover:to-emerald-400 disabled:opacity-50"
-            >
-              <Download className="h-4 w-4" />
-              {t.common.downloadOne}
-            </button>
-            <button
-              type="button"
-              onClick={() => size.remove(size.focusItem!.id)}
-              className="inline-flex items-center justify-center rounded-xl border border-slate-700 px-4 py-3 text-sm text-slate-400 hover:border-red-500/40 hover:text-red-300"
-              aria-label={t.common.remove}
-            >
-              <Trash2 className="h-4 w-4" />
-            </button>
           </div>
+
+          <div className="grid min-w-0 gap-4 lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] lg:items-start lg:gap-5">
+            <div className="order-2 min-w-0 space-y-3 lg:order-1 lg:sticky lg:top-20">
+              {size.items.length > 1 ? (
+                <ToolFileStrip items={size.items} activeId={item.id} onSelect={size.setFocusId} />
+              ) : null}
+
+              <BeforeAfterToggle mode={compare} onChange={setCompare} />
+
+              {compare === "split" ? (
+                <SmartCompareSlider
+                  beforeSrc={item.sourcePreviewUrl}
+                  afterSrc={item.previewUrl}
+                  busy={size.busy || awaitingFirstOutput}
+                />
+              ) : (
+                <ToolSinglePreview
+                  src={
+                    compare === "before" || awaitingFirstOutput
+                      ? item.sourcePreviewUrl
+                      : item.previewUrl
+                  }
+                  label={compare === "before" ? t.livePreview.before : t.livePreview.after}
+                  busy={size.busy || awaitingFirstOutput}
+                />
+              )}
+
+              {(awaitingFirstOutput || size.busy) && !resultReady ? (
+                <p className="flex items-center justify-center gap-2 text-sm text-violet-300">
+                  <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                  {t.toSizeCompress.tuning}
+                </p>
+              ) : null}
+            </div>
+
+            <div className="order-1 min-w-0 space-y-3 lg:order-2">
+              <ToSizeControls
+                targetKb={size.targetKb}
+                onTargetKb={size.setTargetKb}
+                maxWidth={size.maxWidth}
+                onMaxWidth={size.setMaxWidth}
+                fitMode={size.fitMode}
+                onFitMode={size.setFitMode}
+                strategy={size.strategy}
+                onStrategy={size.setStrategy}
+                format={size.format}
+                onFormat={size.setFormat}
+                sampleSize={sampleSize ?? item.originalSize}
+                disabled={size.busy && awaitingFirstOutput}
+              />
+
+              <ToSizeMetricsPanel item={item} busy={size.busy} />
+
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  disabled={size.busy || awaitingFirstOutput || !resultReady}
+                  onClick={() => size.downloadOne(item)}
+                  className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 px-4 py-3 text-sm font-semibold text-slate-950 hover:from-emerald-500 hover:to-emerald-400 disabled:opacity-50"
+                >
+                  <Download className="h-4 w-4" />
+                  {t.common.downloadOne}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => size.remove(item.id)}
+                  className="inline-flex shrink-0 items-center justify-center rounded-xl border border-slate-700 px-4 py-3 text-sm text-slate-400 hover:border-red-500/40 hover:text-red-300"
+                  aria-label={t.common.remove}
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="border-t border-slate-800/60 pt-3">
+            <p className="mb-2 text-center text-[11px] text-slate-500">{t.dropzone.addMore}</p>
+            <ImageDropzone onFiles={size.onFiles} accept={TO_SIZE_ACCEPT} compact />
+          </div>
+
+          {!size.busy && resultReady ? (
+            <p className="text-center text-xs text-slate-500">{t.livePreview.liveHint}</p>
+          ) : null}
         </section>
       ) : null}
 
@@ -107,66 +196,11 @@ export function ToSizeCompressTool() {
         <button
           type="button"
           onClick={size.downloadZip}
-          className="w-full rounded-xl bg-gradient-to-r from-violet-600 to-violet-500 px-4 py-3 text-sm font-semibold text-white"
+          className="w-full max-w-full rounded-xl bg-gradient-to-r from-violet-600 to-violet-500 px-4 py-3 text-sm font-semibold text-white"
         >
           {size.zipLabel}
         </button>
       ) : null}
-
-      {size.items.length ? (
-        <ImageDropzone onFiles={size.onFiles} accept={TO_SIZE_ACCEPT} compact />
-      ) : null}
-    </div>
-  );
-}
-
-function FileStrip({
-  items,
-  activeId,
-  onSelect,
-}: {
-  items: { id: string; name: string }[];
-  activeId: string;
-  onSelect: (id: string) => void;
-}) {
-  const { t } = useI18n();
-  return (
-    <div>
-      <span className="mb-2 block text-xs text-slate-500">{t.livePreview.selectFile}</span>
-      <div className="flex gap-2 overflow-x-auto pb-1">
-        {items.map((item) => (
-          <button
-            key={item.id}
-            type="button"
-            onClick={() => onSelect(item.id)}
-            className={cn(
-              "shrink-0 rounded-lg border px-3 py-1.5 text-xs",
-              item.id === activeId
-                ? "border-emerald-500/50 bg-emerald-500/10 text-emerald-300"
-                : "border-slate-700 text-slate-400 hover:border-violet-500/35",
-            )}
-          >
-            {item.name}
-          </button>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function SinglePreview({ src, label, busy }: { src: string; label: string; busy?: boolean }) {
-  return (
-    <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-slate-800/80 bg-slate-950/80 sm:aspect-video">
-      {busy ? (
-        <div className="absolute inset-0 z-10 flex items-center justify-center bg-slate-950/45">
-          <Loader2 className="h-8 w-8 animate-spin text-violet-300" aria-hidden />
-        </div>
-      ) : null}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={src} alt="" className="h-full w-full object-contain" />
-      <span className="absolute bottom-2 left-2 rounded bg-slate-950/75 px-2 py-0.5 text-[10px] text-slate-300">
-        {label}
-      </span>
     </div>
   );
 }

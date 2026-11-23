@@ -27,9 +27,12 @@ export function WebPMetricsPanel({
   const { t } = useI18n();
   if (!item) return null;
 
-  const delta = item.outputSize - item.originalSize;
+  const awaitingOutput = Boolean(item.pending);
+  const delta = awaitingOutput ? 0 : item.outputSize - item.originalSize;
   const pct =
-    item.originalSize > 0 ? Math.round((delta / item.originalSize) * 100) : 0;
+    !awaitingOutput && item.originalSize > 0
+      ? Math.round((delta / item.originalSize) * 100)
+      : 0;
   const inputMime = item.inputMime;
 
   return (
@@ -38,13 +41,25 @@ export function WebPMetricsPanel({
       <dl className="grid grid-cols-2 gap-3 text-xs sm:grid-cols-3 lg:grid-cols-6">
         <Cell label={t.webpConvert.inputFormat} value={inputFormatLabel(inputMime, t)} />
         <Cell label={t.labels.original} value={formatBytes(item.originalSize)} />
-        <Cell label={t.webpConvert.webpSize} value={formatBytes(item.outputSize)} accent="emerald" pulse={busy} />
+        <Cell
+          label={t.webpConvert.webpSize}
+          value={awaitingOutput ? "…" : formatBytes(item.outputSize)}
+          accent="emerald"
+          pulse={busy || awaitingOutput}
+        />
         <Cell
           label={t.webpConvert.sizeDelta}
-          value={`${delta >= 0 ? "+" : "−"}${formatBytes(Math.abs(delta))} (${pct >= 0 ? "+" : ""}${pct}%)`}
+          value={
+            awaitingOutput
+              ? "…"
+              : `${delta >= 0 ? "+" : "−"}${formatBytes(Math.abs(delta))} (${pct >= 0 ? "+" : ""}${pct}%)`
+          }
           accent={delta <= 0 ? "emerald" : "amber"}
         />
-        <Cell label={t.smartCompress.dimensions} value={`${item.width}×${item.height}`} />
+        <Cell
+          label={t.smartCompress.dimensions}
+          value={item.width > 0 && item.height > 0 ? `${item.width}×${item.height}` : "…"}
+        />
         <Cell
           label={t.smartCompress.processingTime}
           value={

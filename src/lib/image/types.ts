@@ -36,6 +36,8 @@ export type ProcessedImage = {
   transformAngle?: number;
   transformFlipH?: boolean;
   transformFlipV?: boolean;
+  /** Source ingested; output preview not ready yet. */
+  pending?: boolean;
 };
 
 /** Processed output plus original file preview URL for live before/after. */

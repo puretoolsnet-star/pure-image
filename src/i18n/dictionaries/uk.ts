@@ -164,6 +164,11 @@ export const uk: Dictionary = {
     targetSizeHint: "Лише вручну — підбирає якість до цільового розміру.",
     targetSizeOff: "Вимкнено",
     dimensions: "Розмір",
+    workflowUpload: "Завантажено",
+    workflowSettings: "Налаштування стиснення",
+    workflowResult: "Результат",
+    workZoneTitle: "Ваше зображення",
+    uploadedStatus: "Готово до стиснення",
   },
   toSizeCompress: {
     lead: "Підбір якості (і розумний ресайз за потреби) до ліміту в КБ — усе у вашому браузері.",
@@ -190,6 +195,11 @@ export const uk: Dictionary = {
       "Ціль дуже мала для такої роздільності — можлива помітна втрата деталей або збільшіть ліміт.",
     warnCannotMeet:
       "Не вдалося вкластись у ліміт із цим режимом — спробуйте «Якість + ресайз», інший формат або більший КБ.",
+    workflowUpload: "Завантажено",
+    workflowSettings: "Ліміт КБ і режим",
+    workflowResult: "Результат",
+    workZoneTitle: "Підбір до розміру",
+    uploadedStatus: "Готово до підбору",
   },
   batchCompress: {
     lead: "Стисніть десятки фото в керованій черзі — до 2 файлів паралельно, без перевантаження вкладки. Лише локально.",
@@ -216,6 +226,10 @@ export const uk: Dictionary = {
     cancelRun: "Призупинити",
     detailPreview: "Перегляд вибраного",
     errorProcessing: "Не вдалося стиснути цей файл.",
+    workflowUpload: "Завантажено",
+    workflowSettings: "Параметри пакета",
+    workflowResult: "Підсумок",
+    workZoneTitle: "Черга пакетного стиснення",
   },
   webpConvert: {
     lead: "JPG, PNG, GIF, BMP, SVG, HEIC, AVIF тощо → WebP: lossy, lossless або авто. Лише у браузері.",
@@ -238,6 +252,11 @@ export const uk: Dictionary = {
     processing: "Кодуємо WebP…",
     batchTotals: (count, before, after, pct) =>
       `${count} файлів · ${before} → ${after} (${pct >= 0 ? "+" : ""}${pct}% до оригіналів)`,
+    workflowUpload: "Завантажено",
+    workflowSettings: "Налаштування WebP",
+    workflowResult: "Результат",
+    workZoneTitle: "Конвертація в WebP",
+    uploadedStatus: "Готово — налаштуйте параметри",
   },
   avifConvert: {
     lead: "JPG, PNG, WebP, GIF, BMP, SVG, HEIC тощо → AVIF: авто, з втратами або без втрат. Пресети, швидкість кодування, alpha, порівняння та пакет ZIP. Лише у браузері.",
@@ -275,6 +294,11 @@ export const uk: Dictionary = {
     encoding: "Кодуємо AVIF…",
     batchTotals: (count, before, after, pct) =>
       `${count} файлів · ${before} → ${after} (${pct >= 0 ? "+" : ""}${pct}% до оригіналів)`,
+    workflowUpload: "Завантажено",
+    workflowSettings: "Налаштування AVIF",
+    workflowResult: "Результат",
+    workZoneTitle: "Конвертація в AVIF",
+    uploadedStatus: "Готово — налаштуйте параметри",
   },
   heicToJpg: {
     lead: "HEIC/HEIF з iPhone → JPG лише у браузері. Виправлення орієнтації EXIF, опційні метадані, черга, порівняння та ZIP через heic2any.",
@@ -303,6 +327,12 @@ export const uk: Dictionary = {
     errorDecode:
       "Не вдалося декодувати файл. Для HEIC спробуйте інший експорт з «Фото» або перевірте, що файл не пошкоджений.",
     errorUnsupported: "Цей тип файлу не підтримується. HEIC, HEIF, JPG, PNG, WebP, GIF або BMP.",
+    converting: "Декодуємо та експортуємо JPG…",
+    workflowUpload: "Завантажено",
+    workflowSettings: "Налаштування JPG",
+    workflowResult: "Результат",
+    workZoneTitle: "HEIC → JPG",
+    uploadedStatus: "JPG готовий",
   },
   pngToJpg: {
     lead: "PNG → JPG у браузері: заливка прозорості на білий, чорний або будь-який фон. Пресети якості, цільовий розмір, черга, порівняння та ZIP.",
@@ -338,6 +368,12 @@ export const uk: Dictionary = {
     detailPreview: "Порівняння вибраного файлу",
     errorNotPng: "У цьому інструменті приймаються лише PNG.",
     errorProcessing: "Не вдалося конвертувати PNG — спробуйте менший файл.",
+    converting: "Заливка прозорості та експорт JPG…",
+    workflowUpload: "Завантажено",
+    workflowSettings: "Фон і налаштування JPG",
+    workflowResult: "Результат",
+    workZoneTitle: "PNG → JPG",
+    uploadedStatus: "JPG готовий",
   },
   svgConvert: {
     lead: "SVG → PNG або JPG у браузері: масштаб 1×–8×, піксельні пресети, viewBox, санітизація, черга, zoom до 8×, ZIP.",
@@ -378,6 +414,12 @@ export const uk: Dictionary = {
     errorNotSvg: "Підтримуються лише .svg файли.",
     errorParse: "Не вдалося розібрати SVG — перевірте XML і viewBox.",
     errorProcessing: "Помилка рендеру — спростіть SVG або зменшіть розмір.",
+    converting: "Растеризація SVG…",
+    workflowUpload: "SVG додано",
+    workflowSettings: "Формат і розмір",
+    workflowResult: "Результат",
+    workZoneTitle: "Експорт SVG",
+    uploadedStatus: "Растр готовий",
   },
   resizeTool: {
     lead: "Зміна розміру: px або %, Fit / Fill / Stretch, пресети соцмереж і 4K, формат і якість, черга, порівняння та ZIP. Лише в браузері.",
@@ -412,6 +454,12 @@ export const uk: Dictionary = {
     afterLabel: "Після resize",
     detailPreview: "Порівняння вибраного",
     errorProcessing: "Не вдалося змінити розмір цього файлу.",
+    converting: "Змінюємо розмір…",
+    workflowUpload: "Завантажено",
+    workflowSettings: "Розмір і Fit/Fill",
+    workflowResult: "Результат",
+    workZoneTitle: "Черга зміни розміру",
+    uploadedStatus: "Готово",
   },
   pdfAlbumTool: {
     lead:
@@ -461,6 +509,12 @@ export const uk: Dictionary = {
     building: "Збірка PDF…",
     addPagesHint: "Додайте хоча б одне зображення.",
     downloadZipPages: "Завантажити всі сторінки (ZIP)",
+    workflowUpload: "Фото додано",
+    workflowSettings: "Макет PDF",
+    workflowResult: "Завантаження",
+    workZoneTitle: "Фото в PDF",
+    uploadedStatus: "Готово до збірки PDF",
+    pageCountLine: (n) => (n === 1 ? "1 сторінка" : `${n} сторінок`),
   },
   scanEnhanceTool: {
     lead:
@@ -502,6 +556,13 @@ export const uk: Dictionary = {
     beforeLabel: "Оригінал",
     afterLabel: "Покращено",
     errorProcessing: "Не вдалося покращити цей скан.",
+    detailPreview: "Порівняння читабельності",
+    converting: "Покращуємо скан…",
+    workflowUpload: "Скан завантажено",
+    workflowSettings: "Пресети та повзунки",
+    workflowResult: "Результат",
+    workZoneTitle: "Покращення сканів",
+    uploadedStatus: "Готово",
   },
   rotateTool: {
     lead:
@@ -539,6 +600,13 @@ export const uk: Dictionary = {
     beforeLabel: "Оригінал",
     afterLabel: "Результат",
     errorProcessing: "Не вдалося обробити цей файл.",
+    detailPreview: "Прев’ю повороту та дзеркала",
+    converting: "Застосовуємо трансформацію…",
+    workflowUpload: "Завантажено",
+    workflowSettings: "Кут і flip",
+    workflowResult: "Результат",
+    workZoneTitle: "Поворот і дзеркало",
+    uploadedStatus: "Готово",
   },
   cropTool: {
     lead:
@@ -579,6 +647,13 @@ export const uk: Dictionary = {
     beforeLabel: "Оригінал",
     afterLabel: "Обрізане",
     errorProcessing: "Не вдалося обрізати цей файл.",
+    detailPreview: "Прев’ю результату обрізки",
+    converting: "Обрізуємо…",
+    workflowUpload: "Завантажено",
+    workflowSettings: "Пропорції та рамка",
+    workflowResult: "Результат",
+    workZoneTitle: "Обрізка за пропорціями",
+    uploadedStatus: "Обрізку готово",
   },
   socialPresets: {
     lead:
@@ -645,5 +720,12 @@ export const uk: Dictionary = {
     beforeLabel: "Оригінал",
     afterLabel: "Після пресета",
     errorProcessing: "Не вдалося експортувати це зображення.",
+    detailPreview: "Прев’ю експорту для вибраного файлу",
+    converting: "Застосовуємо пресет…",
+    workflowUpload: "Завантажено",
+    workflowSettings: "Пресет і кадрування",
+    workflowResult: "Результат",
+    workZoneTitle: "Пресети соцмереж",
+    uploadedStatus: "Експорт готовий",
   },
 };
