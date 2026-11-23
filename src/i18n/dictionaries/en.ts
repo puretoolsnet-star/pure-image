@@ -34,6 +34,7 @@ export const en: Dictionary = {
       pureTable: { name: "PureTable", tagline: "Tables & Excel at table.kixt.net" },
       pureSign: { name: "PureSign", tagline: "Sign PDFs at sign.kixt.net" },
       pureText: { name: "PureText", tagline: "Text tools at text.kixt.net" },
+      pureConvert: { name: "PureConvert", tagline: "File conversion at convert.kixt.net" },
       pureImage: { name: "Pure Image", tagline: "Compress & convert at img.kixt.net" },
     },
   },

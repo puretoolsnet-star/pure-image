@@ -10,6 +10,7 @@ export type EcosystemProjectId =
   | "pureTable"
   | "pureSign"
   | "pureText"
+  | "pureConvert"
   | "pureImage";
 
 export type EcosystemProjectStatus = "active" | "comingSoon";
@@ -30,6 +31,10 @@ const pureQrOrigin = origin(process.env.NEXT_PUBLIC_ECOSYSTEM_PUREQR_URL, "https
 const pureTableOrigin = origin(process.env.NEXT_PUBLIC_ECOSYSTEM_PURETABLE_URL, "https://table.kixt.net");
 const pureSignOrigin = origin(process.env.NEXT_PUBLIC_ECOSYSTEM_PURESIGN_URL, "https://sign.kixt.net");
 const pureTextOrigin = origin(process.env.NEXT_PUBLIC_ECOSYSTEM_PURETEXT_URL, "https://text.kixt.net");
+const pureConvertOrigin = origin(
+  process.env.NEXT_PUBLIC_ECOSYSTEM_PURECONVERT_URL,
+  "https://convert.kixt.net",
+);
 
 /** Shared kixt.net network landing (optional env override). */
 export const KIXT_HUB_ORIGIN = origin(process.env.NEXT_PUBLIC_KIXT_URL, "https://kixt.net");
@@ -37,7 +42,7 @@ export const KIXT_HUB_ORIGIN = origin(process.env.NEXT_PUBLIC_KIXT_URL, "https:/
 /**
  * Single source of truth for cross-site navigation.
  * Sync this file across PurePDF, PureQR, PureTable, PureSign, Pure Image repos.
- * Order: PDF → QR → Table → Sign → Text → Image (current).
+ * Order: PDF → QR → Table → Sign → Text → Convert → Image (current).
  */
 export const ECOSYSTEM_PROJECTS: EcosystemProjectMeta[] = [
   { id: "purepdf", status: "active", href: purepdfOrigin, external: true },
@@ -45,6 +50,7 @@ export const ECOSYSTEM_PROJECTS: EcosystemProjectMeta[] = [
   { id: "pureTable", status: "active", href: pureTableOrigin, external: true },
   { id: "pureSign", status: "active", href: pureSignOrigin, external: true },
   { id: "pureText", status: "active", href: pureTextOrigin, external: true },
+  { id: "pureConvert", status: "active", href: pureConvertOrigin, external: true },
   { id: "pureImage", status: "active", href: "/" },
 ];
 

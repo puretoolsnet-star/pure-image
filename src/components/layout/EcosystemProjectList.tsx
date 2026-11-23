@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  ArrowLeftRight,
   FileSpreadsheet,
   FileText,
   ImageIcon,
@@ -26,6 +27,7 @@ const PROJECT_ICONS: Record<EcosystemProjectId, typeof ImageIcon> = {
   pureTable: FileSpreadsheet,
   pureSign: PenLine,
   pureText: Type,
+  pureConvert: ArrowLeftRight,
   pureImage: ImageIcon,
 };
 

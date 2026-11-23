@@ -33,6 +33,7 @@ export const de: Dictionary = {
       pureTable: { name: "PureTable", tagline: "Tabellen unter table.kixt.net" },
       pureSign: { name: "PureSign", tagline: "PDF signieren unter sign.kixt.net" },
       pureText: { name: "PureText", tagline: "Text-Tools unter text.kixt.net" },
+      pureConvert: { name: "PureConvert", tagline: "Dateikonvertierung unter convert.kixt.net" },
       pureImage: { name: "Pure Image", tagline: "Bilder unter img.kixt.net" },
     },
   },
