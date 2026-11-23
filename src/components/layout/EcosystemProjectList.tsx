@@ -6,6 +6,7 @@ import {
   ImageIcon,
   PenLine,
   QrCode,
+  Type,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -24,6 +25,7 @@ const PROJECT_ICONS: Record<EcosystemProjectId, typeof ImageIcon> = {
   pureQr: QrCode,
   pureTable: FileSpreadsheet,
   pureSign: PenLine,
+  pureText: Type,
   pureImage: ImageIcon,
 };
 

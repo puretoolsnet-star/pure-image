@@ -32,6 +32,7 @@ export const uk: Dictionary = {
       pureQr: { name: "PureQR", tagline: "QR-коди на qr.kixt.net" },
       pureTable: { name: "PureTable", tagline: "Таблиці на table.kixt.net" },
       pureSign: { name: "PureSign", tagline: "Підпис PDF на sign.kixt.net" },
+      pureText: { name: "PureText", tagline: "Текстові інструменти на text.kixt.net" },
       pureImage: { name: "Pure Image", tagline: "Зображення на img.kixt.net" },
     },
   },
