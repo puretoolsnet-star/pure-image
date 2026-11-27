@@ -2,7 +2,7 @@ import { CURRENT_ECOSYSTEM_PROJECT_ID, KIXT_HUB_ORIGIN } from "@/lib/ecosystem";
 import type { Lang } from "@/i18n/locales";
 
 /** Shared Google Tag Manager container for the kixt.net ecosystem (all Pure* apps). */
-export const KIXT_GTM_ID = "GTM-K2VWRNJ7";
+export const KIXT_GTM_ID = "GTM-NLRHWF83";
 
 /** Pushed once before gtm.js — keep in sync across kixt.net repos. */
 export const KIXT_ECOSYSTEM_CONTEXT = {

@@ -1,8 +1,11 @@
 import type { Lang } from "@/i18n/locales";
 import { CATEGORY_SEO_BY_LANG } from "@/i18n/seo/faq-catalog";
+import { getHomeSeoContent } from "@/i18n/seo/home-content";
 import { buildToolPageSeo } from "@/i18n/seo/tool-page-seo";
 import { getCategoryCopy } from "@/i18n/tool-messages";
 import type { CategoryId, ToolRouteId } from "@/lib/tools/routes";
+
+export { getHomeSeoContent };
 
 export type PageSeoContent = {
   benefitsTitle: string;

@@ -10,12 +10,15 @@ import { useI18n } from "@/i18n/context";
 import { getCategoryCopy } from "@/i18n/tool-messages";
 import { CATEGORIES } from "@/lib/tools/routes";
 import { CATEGORY_ICONS } from "@/lib/tools/icons";
+import { PageSeoSection } from "@/components/seo/PageSeoSection";
+import { getHomeSeoContent } from "@/i18n/seo/page-content";
 import { useLocalizedPath } from "@/lib/i18n/use-localized-path";
 import { cn } from "@/lib/cn";
 
 export function HomePage() {
   const { lang, t } = useI18n();
   const href = useLocalizedPath();
+  const homeSeo = getHomeSeoContent(lang);
 
   return (
     <div className="pureimage-page-shell flex min-h-dvh flex-col bg-slate-950">
@@ -63,6 +66,7 @@ export function HomePage() {
                 );
               })}
             </ul>
+            <PageSeoSection content={homeSeo} />
           </div>
         </div>
       </div>

@@ -8,10 +8,10 @@ import { getSeoCopy, pathForPage } from "@/i18n/seo/copy";
 import { localizedPath } from "@/lib/i18n/routing";
 import {
   absoluteCanonicalUrl,
+  CANONICAL_SITE_ORIGIN,
   DEFAULT_LANG,
   HREFLANG_MAP,
   OPEN_GRAPH_LOCALE,
-  getSiteUrl,
 } from "@/lib/seo/site";
 
 function languageAlternates(page: PageId): Record<string, string> {
@@ -30,7 +30,7 @@ export function buildPageMetadata(page: PageId, lang: Lang): Metadata {
   const canonical = absoluteCanonicalUrl(localizedPath(lang, path));
 
   return {
-    title: copy.title,
+    title: { absolute: copy.title },
     description: copy.description,
     keywords: copy.keywords,
     alternates: {
@@ -65,7 +65,7 @@ export function buildCategoryMetadata(categoryId: CategoryId, lang: Lang): Metad
 
 export function siteMetadataBase(): Metadata {
   return {
-    metadataBase: new URL(getSiteUrl()),
+    metadataBase: new URL(CANONICAL_SITE_ORIGIN),
     applicationName: "Pure Image",
     title: {
       default: "Pure Image",
